@@ -21,26 +21,26 @@ class Router {
 		}
 	}
 
-	private function read($controllerName) {
-		require_once __SITE_PATH . '/controller/' . $controllerName . '.class.php';
-		$controller = new $controllerName($this->registry);
+	private function read($controller_name) {
+		require_once __SITE_PATH . '/controller/' . $controller_name . '.class.php';
+		$controller = new $controller_name($this->registry);
 		return $controller;
 	}
 
-	private function call($controllerName, $actionName) {
-		require_once __SITE_PATH . '/controller/' . $controllerName . '.class.php';
+	private function call($controller_name, $action_name) {
+		require_once __SITE_PATH . '/controller/' . $controller_name . '.class.php';
 		require_once 'FrontController.class.php';
-		$frontController = new FrontController();
-		$frontController->load($this->registry);
-		$controller = new $controllerName($this->registry);
-		$controller->$actionName();
+		$front_controller = new FrontController();
+		$front_controller->load($this->registry);
+		$controller = new $controller_name($this->registry);
+		$controller->$action_name();
 	}
 
 	private function applyRouteWithSecurity() {
 		$authentification_component = $this->registry->AuthentificationComponent;
-		$controllerObject = $this->read($this->controllerName);
+		$controller_object = $this->read($this->controllerName);
 
-		if ($controllerObject->isSecure() && !$authentification_component->isLogOn()) {
+		if ($controller_object->isSecure() && !$authentification_component->isLogOn()) {
 			$this->call('ErrorController', 'restricted');
 		} else {
 			$this->call($this->controllerName, $this->action);

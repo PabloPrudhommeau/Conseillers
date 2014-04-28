@@ -1,6 +1,6 @@
 <?php
 
-class BlogController extends BaseController {
+class HomeController extends BaseController {
 
 	public function index() {
 		$this->registry->template->show();
@@ -31,7 +31,7 @@ class BlogController extends BaseController {
 				}
 			}
 
-			$form_view = $this->registry->FormComponent->createView();
+			$form_view = $this->registry->FormComponent->createView('form_default');
 			$this->registry->template->content = $form_view;
 			$this->registry->template->show();
 		}

@@ -12,7 +12,7 @@ class FrontController {
 		
 		if ($this->registry->AuthentificationComponent->isLogOn()) {
 			
-			$navigation['déconnexion'] = "/blog/signout";
+			$navigation['déconnexion'] = "/home/signout";
 			
 			$this->registry->loadComponent('GlobalFeaturesWidget');
 
@@ -32,7 +32,7 @@ class FrontController {
 
 			$this->registry->template->widget_global_feature = $this->registry->GlobalFeaturesWidgetComponent->createView();
 		} else {
-			$navigation['identification'] = "/blog/signin";
+			$navigation['identification'] = "/home/signin";
 		}
 		
 		$this->registry->template->navigation = $navigation;
