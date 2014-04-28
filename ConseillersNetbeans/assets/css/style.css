@@ -6,24 +6,42 @@
 		url('../font/Muli-Light.ttf') format('truetype'),
 		url('../font/Muli-Light.svg#Muli-Light') format('svg');
 }
+
 @font-face {
     font-family: 'Amaranth-Bold';
     src: url('../font/Amaranth-Bold.otf') format('opentype');
 }
 
 /* Getting the new tags to behave */
-article, aside, audio, canvas, command, datalist, details, embed, figcaption, figure, footer, header, hgroup, keygen, meter, nav, output, progress, section, source, video {display:block;}
-mark, rp, rt, ruby, summary, time {display:inline;}
+article, aside, audio, canvas, command, datalist, details, 
+embed, figcaption, figure, footer, header, hgroup, 
+keygen, meter, nav, output, progress, section, source, video {
+	display:block;
+}
+
+mark, rp, rt, ruby, summary, time {
+	display:inline;
+}
 
 /* Global properties ======================================================== */
-html {width:100%;}
-body {font-family:'Muli', sans-serif;font-size:100%; color:#030303;background:#f3f3f3;}
+html {
+    width:100%;
+}
+
+body {
+	font-family:'Muli', sans-serif;
+	font-size:100%; 
+	color:#030303;
+	background:#f3f3f3;
+}
+
 label {
 	display:block; 
 	height:40px; 
 	overflow:hidden;
 	cursor:pointer;
 }
+
 input {
 	width:95.5%;
 	font-size:12px; 
@@ -35,6 +53,7 @@ input {
 	background:#fff;
 
 }
+
 input[type=submit]{
 	cursor:pointer;
 	background: #ddd;
@@ -43,6 +62,7 @@ input[type=submit]{
 	border:1px solid #02bffe;
 	background: #58d6fc;
 }
+
 textarea {
 	float:left;
 	height:196px; 
@@ -58,13 +78,26 @@ textarea {
 	overflow:auto;
 	outline:none;
 }
+
 table td {
 	padding:5px 0;
 	vertical-align:middle;
 }
-.main {font-size:13px; line-height:24px;}
-.wrapper {width:1024px; margin:0 auto;overflow:hidden;clear:both;}
-.aligncenter {text-align:center;}
+
+.main {
+	font-size:13px; 
+	line-height:24px;
+}
+
+.wrapper {
+	width:1024px; 
+	margin:0 auto;
+	overflow:hidden;
+}
+
+.aligncenter {
+	text-align:center;
+}
 
 /*********************************header*************************************/
 header {
@@ -72,10 +105,30 @@ header {
 	position:relative; 
 	z-index:2;
 }
+
 .menu-row {
 	width:100%;
 	background:#000;
 }
+
+.menu {
+	float:right;
+}
+
+.menu li {
+	float:left; 
+	position:relative;
+}
+
+.menu li a {
+	display:inline-block; 
+	font-size:15px; 
+	line-height:2em;
+	color:#808080; 
+	padding:8px 20px; 
+	text-transform:uppercase;
+}
+
 /*********************************content*************************************/
 #content {
 	width:100%; 
@@ -84,6 +137,7 @@ header {
 	position:relative;
 	z-index:1;
 }
+
 h1 {
 	font-family: 'Amaranth-Bold';
 	font-size:27px; 
@@ -91,12 +145,16 @@ h1 {
 	text-transform:uppercase;
 	margin-bottom:18px;
 }
+
 h3 {
 	font-size:15px; 
 	line-height:1em;
 	margin-bottom:18px;
 }
-h6 {color:#000;}
+
+h6 {
+	color:#000;
+}
 
 /****************************footer************************/
 footer {

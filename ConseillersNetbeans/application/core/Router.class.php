@@ -3,8 +3,8 @@
 class Router {
 
 	private $registry;
-	private $controllerPath;
-	private $controllerName;
+	private $controller_path;
+	private $controller_name;
 	private $action;
 
 	function __construct($registry) {
@@ -14,7 +14,7 @@ class Router {
 
 	public function route() {
 		$this->getController();
-		if (!is_readable($this->controllerPath) || !is_callable(array($this->read($this->controllerName), $this->action))) {
+		if (!is_readable($this->controller_path) || !is_callable(array($this->read($this->controller_name), $this->action))) {
 			$this->call('ErrorController', 'e404');
 		} else {
 			$this->applyRouteWithSecurity();
@@ -38,12 +38,12 @@ class Router {
 
 	private function applyRouteWithSecurity() {
 		$authentification_component = $this->registry->AuthentificationComponent;
-		$controller_object = $this->read($this->controllerName);
+		$controller_object = $this->read($this->controller_name);
 
 		if ($controller_object->isSecure() && !$authentification_component->isLogOn()) {
 			$this->call('ErrorController', 'restricted');
 		} else {
-			$this->call($this->controllerName, $this->action);
+			$this->call($this->controller_name, $this->action);
 		}
 	}
 
@@ -67,8 +67,8 @@ class Router {
 			$this->action = 'index';
 		}
 
-		$this->controllerName = ucwords($controller) . 'Controller';
-		$this->controllerPath = 'controller/' . ucwords($controller) . 'Controller.class.php';
+		$this->controller_name = ucwords($controller) . 'Controller';
+		$this->controller_path = 'controller/' . ucwords($controller) . 'Controller.class.php';
 	}
 
 }

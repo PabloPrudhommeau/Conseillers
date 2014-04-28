@@ -20,7 +20,7 @@ class HomeController extends BaseController {
 					->addFieldRule('password', array('rule_type' => 'operator', 'rule_value' => 'empty', 'rule_bool' => false));
 
 			if ($form->isValid()) {
-				$auth = MemberArea::getInstance();
+				$auth = RegisteredModel::getInstance();
 				$user = $form->getFieldValue('user');
 				$password = $form->getFieldValue('password');
 				$token = $auth->getToken($user, $password);
