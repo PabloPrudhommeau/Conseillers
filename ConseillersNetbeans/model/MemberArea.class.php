@@ -20,7 +20,6 @@ class MemberArea {
 	}
 
 	public static function getToken($user, $password) {
-		
 		$db = Database::getInstance();
 		$query = $db->query('SELECT b.libelle FROM compte as a '
 				. 'LEFT JOIN liste_statut as b ON a.id_statut = b.id '

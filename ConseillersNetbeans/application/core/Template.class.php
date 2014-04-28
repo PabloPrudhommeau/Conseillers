@@ -34,7 +34,8 @@ class Template {
 		}
 
 		foreach ($this->vars as $key => $value) {
-			$$key = $value . "\n";
+	
+			$$key = $value ;
 		}
 
 		include ($this->base);
