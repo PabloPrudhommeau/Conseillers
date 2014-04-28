@@ -8,12 +8,14 @@ ul.widget-global-feature {
 	background: #222;
 	font-size: 1.2em;
 }
+
 ul.widget-global-feature li {
 	float: left;
 	margin: 0;	
 	padding: 0 15px 0 0;
 	position: relative; /*--Declare X and Y axis base for sub navigation--*/
 }
+
 ul.widget-global-feature li a{
 	padding: 10px 5px;
 	color: #ccc;
@@ -31,15 +33,16 @@ ul.widget-global-feature-list {
 	float: left;
 
 }
+
 ul.widget-global-feature-list li{
 	margin: 0; 
 	height:20px;
 	width:250px;
-
 	padding:3px 0px 8px 10px;
 	font-size:12px;
 	background: #ccc;
 }
+
 html ul.widget-global-feature-list li a {
 
 	height:100%;

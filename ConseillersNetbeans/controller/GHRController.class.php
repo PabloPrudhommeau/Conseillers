@@ -1,6 +1,6 @@
 <?php
 
-class ResearchProfessorListController extends BaseController {
+class GHRController extends BaseController {
 
 	public function __construct($registry) {
 		$this->secure = true;

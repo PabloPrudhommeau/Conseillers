@@ -14,3 +14,5 @@ class GlobalFeaturesWidgetComponent extends BaseComponent {
 	}
 
 }
+
+?>
