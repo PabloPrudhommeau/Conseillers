@@ -1,6 +1,6 @@
 <?php
 
-class GHRController extends BaseController {
+class HRDController extends BaseController {
 
 	public function __construct($registry) {
 		$this->secure = true;

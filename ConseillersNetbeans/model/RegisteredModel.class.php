@@ -1,6 +1,6 @@
 <?php
 
-class MemberArea {
+class RegisteredModel {
 
 	private static $instance = NULL;
 
@@ -14,7 +14,7 @@ class MemberArea {
 
 	public static function getInstance() {
 		if (!self::$instance) {
-			self::$instance = new MemberArea();
+			self::$instance = new RegisteredModel();
 		}
 		return self::$instance;
 	}
