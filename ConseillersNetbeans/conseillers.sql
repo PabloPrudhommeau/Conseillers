@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Dim 27 Avril 2014 à 22:03
+-- Généré le: Lun 28 Avril 2014 à 00:31
 -- Version du serveur: 5.6.12-log
 -- Version de PHP: 5.4.12
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `compte` (
   `password` varchar(50) NOT NULL,
   `id_statut` tinyint(4) NOT NULL,
   PRIMARY KEY (`login`),
-  KEY `ID_statut` (`id_statut`)
+  KEY `id_statut` (`id_statut`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -41,7 +41,9 @@ CREATE TABLE IF NOT EXISTS `compte` (
 --
 
 INSERT INTO `compte` (`login`, `password`, `id_statut`) VALUES
-('drh', '147de4c9d38de7fc9029aafbf0cc25a1', 2);
+('drh', '147de4c9d38de7fc9029aafbf0cc25a1', 2),
+('resp', 'bd86bced84fb3aef951fb07de8c533c7', 1),
+('scol', '0edc047e1c7b53cd3e0c7e05bd3cff91', 3);
 
 -- --------------------------------------------------------
 
@@ -55,8 +57,8 @@ CREATE TABLE IF NOT EXISTS `conseiller` (
   `date_deb` date NOT NULL,
   `date_fin` date NOT NULL,
   PRIMARY KEY (`id_enseignant_chercheur`,`id_etudiant`),
-  UNIQUE KEY `ID_etudiant` (`id_etudiant`),
-  KEY `ID_enseignant_chercheur` (`id_enseignant_chercheur`)
+  UNIQUE KEY `id_etudiant` (`id_etudiant`),
+  KEY `id_enseignant_chercheur` (`id_enseignant_chercheur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -72,8 +74,8 @@ CREATE TABLE IF NOT EXISTS `enseignant_chercheur` (
   `prenom` varchar(50) NOT NULL,
   `bureau` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `ID_pole` (`id_pole`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `id_pole` (`id_pole`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Contenu de la table `enseignant_chercheur`
@@ -96,8 +98,8 @@ CREATE TABLE IF NOT EXISTS `etudiant` (
   `prenom` varchar(50) NOT NULL,
   `semestre` tinyint(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `ID_programme` (`id_programme`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `id_programme` (`id_programme`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Contenu de la table `etudiant`
@@ -117,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `habilitation` (
   `id_enseignant_chercheur` int(11) NOT NULL,
   `id_programme` tinyint(4) NOT NULL,
   PRIMARY KEY (`id_enseignant_chercheur`,`id_programme`),
-  KEY `ID_programme` (`id_programme`)
+  KEY `id_programme` (`id_programme`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -175,9 +177,9 @@ CREATE TABLE IF NOT EXISTS `liste_statut` (
 --
 
 INSERT INTO `liste_statut` (`id`, `libelle`) VALUES
-(1, 'resp_prog'),
+(1, 'resp'),
 (2, 'drh'),
-(3, 'scolarite');
+(3, 'scol');
 
 --
 -- Contraintes pour les tables exportées
@@ -187,33 +189,40 @@ INSERT INTO `liste_statut` (`id`, `libelle`) VALUES
 -- Contraintes pour la table `compte`
 --
 ALTER TABLE `compte`
+  ADD CONSTRAINT `compte_ibfk_2` FOREIGN KEY (`id_statut`) REFERENCES `liste_statut` (`ID`),
   ADD CONSTRAINT `compte_ibfk_1` FOREIGN KEY (`ID_statut`) REFERENCES `liste_statut` (`ID`);
 
 --
 -- Contraintes pour la table `conseiller`
 --
 ALTER TABLE `conseiller`
+  ADD CONSTRAINT `conseiller_ibfk_4` FOREIGN KEY (`id_etudiant`) REFERENCES `etudiant` (`ID`),
   ADD CONSTRAINT `conseiller_ibfk_1` FOREIGN KEY (`ID_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`ID`),
-  ADD CONSTRAINT `conseiller_ibfk_2` FOREIGN KEY (`ID_etudiant`) REFERENCES `etudiant` (`ID`);
+  ADD CONSTRAINT `conseiller_ibfk_2` FOREIGN KEY (`ID_etudiant`) REFERENCES `etudiant` (`ID`),
+  ADD CONSTRAINT `conseiller_ibfk_3` FOREIGN KEY (`id_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`ID`);
 
 --
 -- Contraintes pour la table `enseignant_chercheur`
 --
 ALTER TABLE `enseignant_chercheur`
+  ADD CONSTRAINT `enseignant_chercheur_ibfk_2` FOREIGN KEY (`id_pole`) REFERENCES `liste_pole` (`ID`),
   ADD CONSTRAINT `enseignant_chercheur_ibfk_1` FOREIGN KEY (`ID_pole`) REFERENCES `liste_pole` (`ID`);
 
 --
 -- Contraintes pour la table `etudiant`
 --
 ALTER TABLE `etudiant`
+  ADD CONSTRAINT `etudiant_ibfk_2` FOREIGN KEY (`id_programme`) REFERENCES `liste_programme` (`ID`),
   ADD CONSTRAINT `etudiant_ibfk_1` FOREIGN KEY (`ID_programme`) REFERENCES `liste_programme` (`ID`);
 
 --
 -- Contraintes pour la table `habilitation`
 --
 ALTER TABLE `habilitation`
+  ADD CONSTRAINT `habilitation_ibfk_4` FOREIGN KEY (`id_programme`) REFERENCES `liste_programme` (`ID`),
   ADD CONSTRAINT `habilitation_ibfk_1` FOREIGN KEY (`ID_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`ID`),
-  ADD CONSTRAINT `habilitation_ibfk_2` FOREIGN KEY (`ID_programme`) REFERENCES `liste_programme` (`ID`);
+  ADD CONSTRAINT `habilitation_ibfk_2` FOREIGN KEY (`ID_programme`) REFERENCES `liste_programme` (`ID`),
+  ADD CONSTRAINT `habilitation_ibfk_3` FOREIGN KEY (`id_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
