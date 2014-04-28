@@ -25,13 +25,13 @@ class AuthentificationComponent extends BaseComponent {
 	public function goHome() {
 		switch ($_SESSION['statut']) {
 			case 'drh' :
-				header('Location: ' . __SITE_ROOT . __HOME_DRH);
+				header('Location: ' . __SITE_ROOT . __HOME_HUMAN_RESSOURCES_DIRECTOR);
 				break;
 			case 'resp' :
-				header('Location: ' . __SITE_ROOT . __HOME_RESPONSABLE_PROGRAMME);
+				header('Location: ' . __SITE_ROOT . __HOME_PROGRAM_MANAGER);
 				break;
 			case 'scol' :
-				header('Location: ' . __SITE_ROOT . __HOME_SERVICE_SCOLARITE);
+				header('Location: ' . __SITE_ROOT . __HOME_EDUCATION_SERVICE);
 				break;
 		}
 	}

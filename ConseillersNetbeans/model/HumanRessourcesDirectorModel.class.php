@@ -1,6 +1,6 @@
 <?php
 
-class HRDModel {
+class HumanRessourcesDirectorModel {
 
 	private function __construct() {
 		

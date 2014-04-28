@@ -111,24 +111,6 @@ header {
 	background:#000;
 }
 
-.menu {
-	float:right;
-}
-
-.menu li {
-	float:left; 
-	position:relative;
-}
-
-.menu li a {
-	display:inline-block; 
-	font-size:15px; 
-	line-height:2em;
-	color:#808080; 
-	padding:8px 20px; 
-	text-transform:uppercase;
-}
-
 /*********************************content*************************************/
 #content {
 	width:100%; 

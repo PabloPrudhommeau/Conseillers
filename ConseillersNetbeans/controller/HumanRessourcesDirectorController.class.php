@@ -1,6 +1,6 @@
 <?php
 
-class HRDController extends BaseController {
+class HumanRessourcesDirectorController extends BaseController {
 
 	public function __construct($registry) {
 		$this->secure = true;
