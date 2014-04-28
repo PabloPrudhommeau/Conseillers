@@ -14,10 +14,10 @@ class HomeController extends BaseController {
 			$this->registry->loadComponent('Form');
 			$form = $this->registry->FormComponent;
 			$form->init('post', '');
-			$form->addField('text', 'Nom d\'utilisateur', 'user')
-					->addField('password', 'Mot de passe', 'password');
-			$form->addFieldRule('user', 'operator', 'empty', false)
-					->addFieldRule('password', 'operator', 'empty', false);
+			$form->addField('Nom d\'utilisateur', 'user', array('type' => 'text', 'maxlength' => '20'))
+					->addField('Mot de passe', 'password', array('type' => 'password', 'maxlength' => '20'))
+					->addFieldRule('user', array('rule_type' => 'operator', 'rule_value' => 'empty', 'rule_bool' => false))
+					->addFieldRule('password', array('rule_type' => 'operator', 'rule_value' => 'empty', 'rule_bool' => false));
 
 			if ($form->isValid()) {
 				$auth = MemberArea::getInstance();
@@ -25,9 +25,10 @@ class HomeController extends BaseController {
 				$password = $form->getFieldValue('password');
 				$token = $auth->getToken($user, $password);
 				if ($token) {
-
 					$this->registry->AuthentificationComponent->signin($user, $password, $token['statut']);
 					$this->registry->AuthentificationComponent->goHome();
+				} else {
+					$form->addCommonError('Ce couple utilisateur/mot de passe n\'a pas permis de vous authentifier');
 				}
 			}
 

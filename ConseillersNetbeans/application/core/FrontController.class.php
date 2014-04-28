@@ -8,7 +8,7 @@ class FrontController {
 		$this->registry = $registry;
 		
 		$navigation = array();
-		$navigation['accueil'] = "";
+		$navigation['accueil'] = "/";
 		
 		if ($this->registry->AuthentificationComponent->isLogOn()) {
 			
