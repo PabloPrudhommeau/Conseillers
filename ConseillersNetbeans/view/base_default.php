@@ -10,32 +10,22 @@
 
 		<link rel="stylesheet" href="<?php echo __SITE_ROOT . '/assets/css/reset.css'; ?>" type="text/css" media="screen">
 		<link rel="stylesheet" href="<?php echo __SITE_ROOT . '/assets/css/style.css'; ?>" type="text/css" media="screen">
-		<link rel="stylesheet" href="<?php echo __SITE_ROOT . '/assets/css/widgets.css'; ?>" type="text/css" media="screen">
+		<link rel="stylesheet" href="<?php echo __SITE_ROOT . '/assets/css/components.css'; ?>" type="text/css" media="screen">
 
 		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/jquery-1.10.2.js'; ?>"></script>
 		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/jquery-ui-1.10.4.custom.js'; ?>"></script>
 		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/jquery.easing.1.3.js'; ?>"></script>
-		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/navigation.js'; ?>"></script>
-		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/widgets.js'; ?>"></script>
+		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/components.js'; ?>"></script>
 
 	</head>
 	<body id="page1">
 		<!--==============================header=================================-->
 		<header>
 			<div class="menu-row">
-				<div class="main zerogrid">
-					<?php echo $widget_global_feature; ?>
+			<?php echo $widget_menu_feature; ?>
+				<div class="main">
 					<nav class="wrapper">
-						<ul class="menu">
-							<?php
-							
-							foreach ($navigation as $key => $val) {
-								?>
-								<li><a href="<?php echo __SITE_ROOT . $val; ?>"><?php echo $key; ?></a></li>
-								<?php
-							}
-							?>
-						</ul>
+						<?php echo $widget_menu_main; ?>
 					</nav>
 				</div>
 			</div>
@@ -43,7 +33,7 @@
 
 		<!--==============================content================================-->
 		<section id="content">
-			<div class="main zerogrid">
+			<div class="main">
                 <div class="wrapper">
 					<h1><?php echo $page_first_title; ?></h1>
 					<h3><?php echo $page_second_title; ?></h3>
@@ -55,7 +45,7 @@
 
 		<!--==============================footer=================================-->
 		<footer>
-			<div class="main zerogrid">
+			<div class="main">
 				<div class="aligncenter">
 					<p class="p0"></p>
 				</div>

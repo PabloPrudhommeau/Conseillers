@@ -63,10 +63,10 @@ table td {
 	vertical-align:middle;
 }
 .main {font-size:13px; line-height:24px;}
-.wrapper {width:1024px; margin:0 auto;overflow:hidden;}
+.wrapper {width:1024px; margin:0 auto;overflow:hidden;clear:both;}
 .aligncenter {text-align:center;}
 
-/*********************************menu*************************************/
+/*********************************header*************************************/
 header {
 	width:100%;
 	position:relative; 
@@ -75,24 +75,7 @@ header {
 .menu-row {
 	width:100%;
 	background:#000;
-	border-bottom:2px solid #2b2b2b;
 }
-.menu {
-	float:right;
-}
-.menu li {
-	float:left; 
-	position:relative;
-}
-.menu li a {
-	display:inline-block; 
-	font-size:15px; 
-	line-height:2em;
-	color:#808080; 
-	padding:8px 20px; 
-	text-transform:uppercase;
-}
-
 /*********************************content*************************************/
 #content {
 	width:100%; 
@@ -100,24 +83,6 @@ header {
 	background:#fff;
 	position:relative;
 	z-index:1;
-}
-.form{
-	width:50%;	
-}
-.form .field{
-	width:30%;
-}
-.form .label{
-	width:10%;
-}
-.form .label label{
-	height:100%
-}
-.form-error{
-	margin-top:10px;
-	padding:5px;
-	border:1px solid #ffadad;
-	background:#ffebeb;
 }
 h1 {
 	font-family: 'Amaranth-Bold';
