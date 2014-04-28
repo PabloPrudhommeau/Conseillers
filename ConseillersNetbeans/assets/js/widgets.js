@@ -1,14 +1,9 @@
 $(document).ready(function() {
-	$("ul.widget-global-feature-list").parent().append("<span></span>");
-	$("ul.widget-global-feature li span").hover(function() {
-		$(this).parent().find("ul.widget-global-feature-list").slideDown('fast').show();
-		$(this).parent().hover(function() {
+	$("ul.widget-global-feature").hover(function() {
+		$(this).find("ul.widget-global-feature-list").slideDown(100);
+		$(this).hover(function() {
 		}, function() {
-			$(this).parent().find("ul.widget-global-feature-list").slideUp('slow');
+			$(this).parent().find("ul.widget-global-feature-list").stop().slideUp(100);
 		});
-	}).hover(function() {
-		$(this).addClass("subhover");
-	}, function() {
-		$(this).removeClass("subhover");
-	});
+	})
 });

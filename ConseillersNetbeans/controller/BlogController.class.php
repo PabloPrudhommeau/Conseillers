@@ -6,7 +6,7 @@ class BlogController extends BaseController {
 		$this->registry->template->show();
 	}
 
-	public function authentification() {
+	public function signin() {
 		$this->registry->template->page_second_title = 'Authentification';
 		if ($this->registry->AuthentificationComponent->isLogOn()) {
 			$this->registry->AuthentificationComponent->goHome();
@@ -35,6 +35,11 @@ class BlogController extends BaseController {
 			$this->registry->template->content = $form_view;
 			$this->registry->template->show();
 		}
+	}
+	
+	public function signout(){
+		$this->registry->AuthentificationComponent->signout();
+		header('Location:'.__SITE_ROOT.'/');
 	}
 
 }

@@ -6,22 +6,31 @@ class AuthentificationComponent extends BaseComponent {
 		session_start();
 	}
 
+	public function getStatut(){
+		return $_SESSION['statut'];
+	}
+	
 	public function signin($user, $password, $statut) {
 		$_SESSION['user'] = $user;
 		$_SESSION['password'] = $password;
 		$_SESSION['statut'] = $statut;
 	}
+	
+	public function signout(){
+		unset($_SESSION['user']);
+		unset($_SESSION['password']);
+		unset($_SESSION['statut']);
+	}
 
 	public function goHome() {
-
 		switch ($_SESSION['statut']) {
 			case 'drh' :
 				header('Location: ' . __SITE_ROOT . __HOME_DRH);
 				break;
-			case 'responsable_programme' :
+			case 'resp' :
 				header('Location: ' . __SITE_ROOT . __HOME_RESPONSABLE_PROGRAMME);
 				break;
-			case 'service_scolarite' :
+			case 'scol' :
 				header('Location: ' . __SITE_ROOT . __HOME_SERVICE_SCOLARITE);
 				break;
 		}

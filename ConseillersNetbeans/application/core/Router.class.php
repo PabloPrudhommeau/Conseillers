@@ -9,6 +9,7 @@ class Router {
 
 	function __construct($registry) {
 		$this->registry = $registry;
+		$this->registry->loadComponent('Authentification');
 	}
 
 	public function route() {
@@ -36,7 +37,6 @@ class Router {
 	}
 
 	private function applyRouteWithSecurity() {
-		$this->registry->loadComponent('Authentification');
 		$authentification_component = $this->registry->AuthentificationComponent;
 		$controllerObject = $this->read($this->controllerName);
 

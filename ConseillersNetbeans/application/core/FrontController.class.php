@@ -6,12 +6,36 @@ class FrontController {
 
 	public function load($registry) {
 		$this->registry = $registry;
+		
+		$navigation = array();
+		$navigation['accueil'] = "";
+		
 		if ($this->registry->AuthentificationComponent->isLogOn()) {
+			
+			$navigation['déconnexion'] = "/blog/signout";
+			
 			$this->registry->loadComponent('GlobalFeaturesWidget');
-			$this->registry->GlobalFeaturesWidgetComponent->addLink('ok');
-			$global_features = $this->registry->GlobalFeaturesWidgetComponent->createView();
-			$this->registry->template->widget_global_feature = $global_features;
+
+			$statut = $this->registry->AuthentificationComponent->getStatut();
+			switch ($statut) {
+				case 'drh' :
+					$this->registry->GlobalFeaturesWidgetComponent->addLink('Gestion des enseignants chercheurs', '/ResearchProfessorList');
+					break;
+				case 'resp' :
+					$this->registry->GlobalFeaturesWidgetComponent->addLink('Gestion des enseignants chercheurs', '/Habilitation');
+					break;
+				case 'scol' :
+					$this->registry->GlobalFeaturesWidgetComponent->addLink('Gestion de la liste des étudiants', '/StudentList');
+					$this->registry->GlobalFeaturesWidgetComponent->addLink('Gestion des conseillers', '/AdvisorsManagement');
+					break;
+			}
+
+			$this->registry->template->widget_global_feature = $this->registry->GlobalFeaturesWidgetComponent->createView();
+		} else {
+			$navigation['identification'] = "/blog/signin";
 		}
+		
+		$this->registry->template->navigation = $navigation;
 	}
 
 }
