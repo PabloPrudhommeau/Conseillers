@@ -5,12 +5,20 @@ class TableComponent extends BaseComponent {
 	private $data_header = array();
 	private $data_row = array();
 	
-	public function addDataRow($data) {
-		$this->data_row[] = $data;
+	public function setDataRow($arr = array()) {
+		$this->data_row = $arr;
 	}
 
-	public function addDataHeader($label) {
-		$this->data_header = $label;
+	public function setDataHeader($arr = array()) {
+		$this->data_header = $arr;
+	}
+
+	public function addRow() {
+
+	}
+
+	public function addHeader() {
+
 	}
 
 	public function getHeader() {
@@ -22,8 +30,8 @@ class TableComponent extends BaseComponent {
 	}
 
 	public function createView($template = 'table_default') {
-		$this->header = $this->data_header;
-		$this->data = $this->data_row;
+		$this->table_header = $this->data_header;
+		$this->table_data = $this->data_row;
 		return parent::createView($template);
 	}
 

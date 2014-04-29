@@ -1,15 +1,15 @@
 <table>
-	<th>
+	<tr>
 		<?php
-		foreach($header as $key => $val) {
+		foreach($table_header as $val) {
 			?>
-			<td><?php echo $val['label'] ?></td>
+			<td><?php echo $val ?></td>
 			<?php
 		}
 		?>
-	</th>
+	</tr>
 	<?php
-	foreach($data as $data_row) {
+	foreach($table_data as $data_row) {
 		?>
 		<tr class="table-row">
 		<?php
