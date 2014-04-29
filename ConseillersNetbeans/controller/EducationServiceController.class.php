@@ -1,6 +1,6 @@
 <?php
 
-class HumanRessourcesDirectorController extends BaseController {
+class EducationServiceController extends BaseController {
 
 	public function __construct($registry) {
 		$this->secure = true;
@@ -8,14 +8,15 @@ class HumanRessourcesDirectorController extends BaseController {
 	}
 
 	public function index() {
-		$this->registry->template->page_first_title = "Gestion des enseignants chercheurs";
+		$this->registry->template->page_first_title = "Gestion des élèves";
 
-		$hrd = new HumanRessourcesDirectorModel();
-		$data = $hrd->getDatas();
+		$edu_service = new EducationServiceModel();
+		$data = $edu_service->getDatas();
 
 		$this->registry->loadComponent('Table');
 		$table = $this->registry->TableComponent;
-		$table->setDataHeader(array(array('Nombre d\'étudiants conseillés', 1, 'Prenom', 1, 'Nom', 1, 'Bureau', 1, 'Pole', 1)));
+		$table->setDataHeader(array(array('Etudiants', 3, 'Enseignants chercheurs', 3),
+									array('Prenom', 1, 'Nom', 1, 'Formation', 1, 'Prenom', 1, 'Nom', 1, 'Bureau', 1, 'Pole', 1)));
 		$table->setDataRow($data);
 
 		$table_view = $this->registry->TableComponent->createView('table_default');
