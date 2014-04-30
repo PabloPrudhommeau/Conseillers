@@ -8,7 +8,13 @@ class ProgramManagerController extends BaseController {
 	}
 
 	public function index() {
-		$this->registry->template->page_first_title = "Gestion des habilitations à conseiller";
+		$this->registry->template->content = 'TODO : liste des fonctionnalités';
+		$this->registry->template->show();
+	}
+	
+	public function manageHabilitation(){
+		
+		$this->registry->template->page_first_title = "Gestion des habilitations des conseillers";
 
 		$program_manager = $this->registry->newModel('ProgramManager');
 		$data = $program_manager->getData();

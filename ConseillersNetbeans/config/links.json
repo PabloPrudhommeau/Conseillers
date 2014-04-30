@@ -1,0 +1,20 @@
+{
+	"service_scolarite": {
+		"home": "/EducationService/",
+		"features": {
+			"Attribution d'étudiant": "/EducationService/AssignNewStudent/"
+		}
+	},
+	"directeur_ressources_humaine": {
+		"home": "/HumanRessourcesDirector/",
+		"features": {
+			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageResearcher/"
+		}
+	},
+	"responsable_programme": {
+		"home": "/ProgramManager/",
+		"features": {
+			"Gestion des habilitations": "/ProgramManager/ManageHabilitation/"
+		}
+	}
+}

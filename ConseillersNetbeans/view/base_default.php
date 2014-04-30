@@ -16,8 +16,7 @@
 		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/jquery-ui-1.10.4.custom.js'; ?>"></script>
 		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/jquery.easing.1.3.js'; ?>"></script>
 		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/functions.js'; ?>"></script>
-		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/MenuWidgetComponent.js'; ?>"></script>
-		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/ButtonWidgetComponent.js'; ?>"></script>
+		<script type="text/javascript" src="<?php echo __SITE_ROOT . '/assets/js/components.js'; ?>"></script>
 
 	</head>
 	<body id="page1">
