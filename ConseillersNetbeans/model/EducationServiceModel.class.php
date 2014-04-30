@@ -13,24 +13,90 @@ class EducationServiceModel {
 								LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
 								LEFT JOIN liste_pole AS lp ON 			(lp.id=ec.id_pole)
 								LEFT JOIN liste_programme AS p ON 		(p.id=etu.id_programme)'
-		);
+				);
 		$row = $query->fetchAll();
 		return $row;
 	}
 
-	public function assigneNewStudent($name, $firstname) {
+	public function assignNewStudent($name, $firstname) {
 		$db = Database::getInstance();
-		$query = $db->query('	SELECT ec.nom AS ec_nom
+		$query = $db->query('	SELECT 	ec.id AS ec_id, 
+										etu.id AS etu_id,
+										COUNT(c.id_enseignant_chercheur) AS nbetu 
+								FROM 	etudiant AS etu, 
+										enseignant_chercheur AS ec
+								LEFT JOIN conseiller AS c ON (c.id_enseignant_chercheur=ec.id)
+								LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
+								WHERE etu.nom="SYRIAN"
+								AND etu.prenom="Hafar"
+								AND etu.id_programme=h.id_programme
+								GROUP BY(c.id_enseignant_chercheur)
+								ORDER BY nbetu ASC
+								LIMIT 0,1'
+				);
+		$row = $query->fetch();
+
+		$query = $db->query('INSERT INTO conseiller VALUES(`'.$row->ec_id.',`'.$row->etu_id.'`');
+		$query->exec();
+
+		return $this->getData();
+	}
+
+	static function etuCompare($a, $b) {
+	    if ($a == $b) {
+	        return 0;
+	    }
+	    return ($a < $b) ? -1 : 1;
+	}
+
+	public function assignNewStudents() {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT etu.id, etu.id_programme 
 								FROM etudiant AS etu
-								LEFT JOIN habilitation AS hb ON			(etu.id_programme = hb.id_programme)
-								LEFT JOIN enseignant_chercheur AS ec ON (ec.id = hb.id_enseignant_chercheur)
-								LEFT JOIN conseiller AS c ON 			(c.id_enseignant_chercheur=ec.id)
-								WHERE hb.id_programme = etu.id_programme
-								AND etu.nom = "'.$name.'"
-								AND etu.prenom = "'.$firstname.'"'
-		);
-		$row = $query->fetchAll();
-		return 'Conseiller à ajouter : '.$row[0]->ec_nom.' (TODO : prendre le conseiller qui a le plus petit nombre d\'habilitation, puis l\'insérer physiquement en base)';
+								LEFT OUTER JOIN conseiller AS c ON (c.id_etudiant=etu.id)
+								WHERE c.id_etudiant is NULL'
+				);
+		$student = $query->fetchAll();
+
+		$query = $db->query ('	SELECT COUNT(c.id_enseignant_chercheur) AS nbetu, ec.id
+								FROM enseignant_chercheur AS ec
+								LEFT JOIN conseiller AS c ON (c.id_enseignant_chercheur=ec.id)
+								GROUP BY(c.id_enseignant_chercheur)
+								ORDER BY nbetu'
+				);
+		$academic_researcher = $query->fetchAll();
+
+		$query = $db->query (' 	SELECT h.* 
+								FROM enseignant_chercheur AS ec
+								LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)'
+				);
+		$authorization = $query->fetchAll();
+
+		$found = false;
+
+		foreach($student as $student_val) {
+			$student_prog = $student_val->id_programme;
+			foreach($academic_researcher as $academic_researcher_key => $academic_researcher_val) {
+				foreach($authorization as $authorization_val) {
+					if($authorization_val->id_enseignant_chercheur == $academic_researcher_val->id) {
+						$academic_researcher_choose = $academic_researcher_val->id;
+						$academic_researcher_choose_key = $academic_researcher_key;
+						$found = true;
+						break;
+					}
+				}
+				if($found) break;
+			}
+			$query = $db->query('INSERT INTO conseiller VALUES(`'.$academic_researcher_choose.'`, `'.$student_val->id.'`');
+			$query->exec();
+			$academic_researcher[$academic_researcher_choose_key]->nbetu += 1;
+			usort($academic_researcher, array('EducationServiceModel', 'etuCompare'));
+			$academic_researcher_choose = '';
+			$found = false;
+		}
+
+
+		return $this->getData();
 	}
 
 }

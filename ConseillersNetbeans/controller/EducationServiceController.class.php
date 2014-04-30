@@ -16,6 +16,8 @@ class EducationServiceController extends BaseController {
 		$this->registry->template->page_first_title = 'Gestion des élèves';
 
 		$education_service = $this->registry->newModel('EducationService');
+		$education_service->assignNewStudents();
+
 		$data = $education_service->getData();
 		foreach ($data as $val) {
 			if ($val->ec_nom == "") {
