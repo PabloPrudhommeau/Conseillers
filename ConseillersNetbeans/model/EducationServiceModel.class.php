@@ -18,6 +18,10 @@ class EducationServiceModel {
 		return $row;
 	}
 
+	public function getFormation() {
+		$db = Database::getInstance();
+	}
+
 	public function assignNewStudent($name, $firstname) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT 	ec.id AS ec_id, 
@@ -36,8 +40,7 @@ class EducationServiceModel {
 				);
 		$row = $query->fetch();
 
-		$query = $db->query('INSERT INTO conseiller VALUES(`'.$row->ec_id.',`'.$row->etu_id.'`');
-		$query->exec();
+		$query->exec('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES('.$row->ec_id.','.$row->etu_id.')');
 
 		return $this->getData();
 	}
@@ -87,8 +90,7 @@ class EducationServiceModel {
 				}
 				if($found) break;
 			}
-			$query = $db->query('INSERT INTO conseiller VALUES(`'.$academic_researcher_choose.'`, `'.$student_val->id.'`');
-			$query->exec();
+			$db->exec('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES('.$academic_researcher_choose.', '.$student_val->id.')');
 			$academic_researcher[$academic_researcher_choose_key]->nbetu += 1;
 			usort($academic_researcher, array('EducationServiceModel', 'etuCompare'));
 			$academic_researcher_choose = '';
