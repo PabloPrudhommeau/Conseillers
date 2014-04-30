@@ -2,7 +2,8 @@
 	"service_scolarite": {
 		"home": "/EducationService/",
 		"features": {
-			"Attribution d'étudiant": "/EducationService/AssignNewStudent/"
+			"Attribution d'étudiant": "/EducationService/AssignNewStudent/",
+			"Attribution de tous les étudiants orhpelins": "/EducationService/AssignNewStudents/"
 		}
 	},
 	"directeur_ressources_humaine": {

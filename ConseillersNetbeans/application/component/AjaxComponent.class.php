@@ -10,4 +10,5 @@ class AjaxComponent extends BaseComponent {
 		}
 		return $request;
 	}
+
 }

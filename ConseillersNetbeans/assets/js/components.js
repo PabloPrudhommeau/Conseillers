@@ -39,3 +39,11 @@ $(document).ready(function(){
 		eval(action);
 	});
 });
+
+//Widget Bouton Default
+$(document).ready(function(){
+	$('.widget-button-classic').click(function(){
+		var action = decodeURIComponent($(this).attr('action'));
+		eval(action);
+	});
+});

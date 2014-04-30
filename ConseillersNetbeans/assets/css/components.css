@@ -54,7 +54,7 @@ ul.widget-menu-feature li {
 	height:100%;
 }
 ul.widget-menu-feature li a{
-	padding:12.2% 0;
+	padding:12% 0;
 	width:100%;
 	display:block;
 	color:#ccc;
@@ -84,7 +84,7 @@ ul.widget-menu-feature-list li a{
 
 /* Composant Table */
 table.table-default tr:nth-child(even) {
-	background:  #dcf1ce;
+	background: #dcf1ce;
 }
 table.table-default tr:nth-child(odd) {
 	background: #fff
@@ -93,8 +93,19 @@ table.table-default td, th {
 	padding:5px 15px;
 	text-align:left;
 }
+table.table-default img {
+	vertical-align:middle;
+	margin-left:5px;
+}
 
 /* Widget Button Default */
 img.widget-button-default {
 	cursor:pointer;
+}
+/* Widget Button Classic */
+button.widget-button-classic {
+	background: #dcf1ce;
+	padding:5px;
+	cursor:pointer;
+	font-family:inherit;
 }

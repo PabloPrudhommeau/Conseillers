@@ -94,8 +94,6 @@ class EducationServiceModel {
 			$academic_researcher_choose = '';
 			$found = false;
 		}
-
-
 		return $this->getData();
 	}
 
