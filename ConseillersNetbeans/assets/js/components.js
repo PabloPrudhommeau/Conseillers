@@ -31,3 +31,11 @@ $(document).ready(function(){
 		},300);
 	});
 });
+
+//Widget Bouton Default
+$(document).ready(function(){
+	$('.widget-button-default').click(function(){
+		var action = decodeURIComponent($(this).attr('action'));
+		eval(action);
+	});
+});

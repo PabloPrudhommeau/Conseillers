@@ -1,9 +1,10 @@
-function assign_new_student(name, first_name){
+function ajax_send(target, datas){
 	$(document).ready(function(){
+		var obj = $.parseJSON(datas);
 		$.ajax({
-			type: "POST",
-			url: "/EducationService/AssignNewStudent/",
-			data: "name="+name+"&first_name="+first_name
+			type: 'POST',
+			url: target,
+			data: obj
 		}).done(function(data){
 			alert(data);
 		});
