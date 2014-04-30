@@ -36,11 +36,12 @@ class HomeController extends BaseController {
 			$this->registry->template->show();
 		}
 	}
-	
-	public function signout(){
+
+	public function signout() {
 		$this->registry->Authentification->signout();
-		header('Location:'.__SITE_ROOT.'/');
+		header('Location:' . __SITE_ROOT . '/');
 	}
 
 }
+
 ?>

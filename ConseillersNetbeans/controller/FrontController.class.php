@@ -6,11 +6,9 @@ class FrontController {
 
 	public function load($registry) {
 		$this->registry = $registry;
-		
-		$menu_main = $this->registry->newComponent('MenuWidget');
-		$menu_feature = $this->registry->newComponent('MenuWidget');
 
 		//Menu principal
+		$menu_main = $this->registry->newComponent('MenuWidget');
 		$menu_main->addLink(array('value' => 'accueil', 'href' => '/'));
 		if ($this->registry->Authentification->isLogOn()) {
 			$menu_main->addLink(array('value' => 'déconnexion', 'href' => '/home/signout', 'class' => 'signout'));
@@ -20,19 +18,17 @@ class FrontController {
 		$this->registry->template->widget_menu_main = $menu_main->createView('widget_menu_main');
 
 		//Menu fonctionnalités
+		$menu_feature = $this->registry->newComponent('MenuWidget');
 		if ($this->registry->Authentification->isLogOn()) {
-			switch ($this->registry->Authentification->getStatut()) {
-				case 'drh' :
-					$menu_feature->addLink(array('value' => 'Gestion des enseignants chercheurs', 'href' => '/humanRessourcesDirector/'));
-					break;
-				case 'resp' :
-					$menu_feature->addLink(array('value' => 'Gestion des habilitations à conseiller', 'href' => '/programManager'));
-					break;
-				case 'scol' :
-					$menu_feature->addLink(array('value' => 'Gestion des élèves', 'href' => '/educationService'));
-					break;
+			$statut = $this->registry->Authentification->getStatut();
+			if (!empty($this->registry->json_data->links->$statut->features)) {
+				
+				foreach($this->registry->json_data->links->$statut->features as $key => $val){
+					$menu_feature->addLink(array('value' => $key, 'href' => $val));
+				}
 			}
 			$this->registry->template->widget_menu_feature = $menu_feature->createView('widget_menu_feature');
 		}
 	}
+
 }

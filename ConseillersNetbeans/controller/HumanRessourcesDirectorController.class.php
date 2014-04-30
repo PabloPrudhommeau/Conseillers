@@ -8,13 +8,18 @@ class HumanRessourcesDirectorController extends BaseController {
 	}
 
 	public function index() {
+		$this->registry->template->content = 'TODO : liste des fonctionnalités';
+		$this->registry->template->show();
+	}
+	
+	public function manageResearcher(){
 		$this->registry->template->page_first_title = "Gestion des enseignants chercheurs";
 
 		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
 		$data = $humanRessourcesDirector->getData();
 
 		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array(array('Nombre d\'étudiants conseillés', 1, 'Prenom', 1, 'Nom', 1, 'Bureau', 1, 'Pole', 1)));
+		$table->setDataHeader(array('Nombre d\'étudiants conseillés', 'Prenom', 'Nom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
 
 		$table_view = $table->createView('table_default');
