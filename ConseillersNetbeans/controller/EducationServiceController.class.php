@@ -8,21 +8,37 @@ class EducationServiceController extends BaseController {
 	}
 
 	public function index() {
-		$this->registry->template->page_first_title = "Gestion des élèves";
+		$this->registry->template->page_first_title = 'Gestion des élèves';
 
-		$edu_service = new EducationServiceModel();
-		$data = $edu_service->getDatas();
+		$education_service = $this->registry->newModel('EducationService');
+		$data = $education_service->getData();
+		foreach ($data as $key => $val) {
+			if ($val->ec_nom == "") {
+				$button = $this->registry->newComponent('ButtonWidget');
+				$button->setImage('plus.gif');
+				$button->setAction('assign_new_student(\''.$val->etu_nom.'\', \''.$val->etu_prenom.'\');');
+				$val->ec_nom = $button->createView();
+			}
+		}
 
-		$this->registry->loadComponent('Table');
-		$table = $this->registry->TableComponent;
-		$table->setDataHeader(array(array('Etudiants', 3, 'Enseignants chercheurs', 3),
-									array('Prenom', 1, 'Nom', 1, 'Formation', 1, 'Prenom', 1, 'Nom', 1, 'Bureau', 1, 'Pole', 1)));
+		$table = $this->registry->newComponent('Table');
+		$table->setDataHeader(array('Prenom', 'Nom', 'Formation', 'Conseillé habilité'));
 		$table->setDataRow($data);
 
-		$table_view = $this->registry->TableComponent->createView('table_default');
-		$this->registry->template->content = $table_view;
+		$table_view = $table->createView('table_default');
 
+		$this->registry->template->content = $table_view;
 		$this->registry->template->show();
+	}
+
+	public function assignNewStudent() {
+		$ajax = $button = $this->registry->newComponent('Ajax');
+		$data = $ajax->interceptData();
+		if(isset($data['name']) && isset($data['first_name'])){
+			$education_service = $this->registry->newModel('EducationService');
+			$data = $education_service->assigneNewStudent($data['name'], $data['first_name']);
+			echo $data;
+		}
 	}
 
 }

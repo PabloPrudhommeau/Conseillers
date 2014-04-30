@@ -1,8 +1,8 @@
 <?php
 
-class AuthentificationComponent extends BaseComponent {
+class Authentification extends BaseComponent {
 
-	public function __construct() {
+	public function __construct($registry) {
 		session_start();
 	}
 

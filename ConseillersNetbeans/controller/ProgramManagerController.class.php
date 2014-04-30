@@ -10,15 +10,15 @@ class ProgramManagerController extends BaseController {
 	public function index() {
 		$this->registry->template->page_first_title = "Gestion des habilitations à conseiller";
 
-		$program_manager = new ProgramManagerModel();
-		$data = $program_manager->getDatas();
+		$program_manager = $this->registry->newModel('ProgramManager');
+		$data = $program_manager->getData();
 
-		$this->registry->loadComponent('Table');
-		$table = $this->registry->TableComponent;
-		$table->setDataHeader(array(array('Prenom', 1, 'Nom', 1, 'Bureau', 1, 'Habilitations', 6)));
+		$table = $this->registry->newComponent('Table');
+		$table->setCaption('Titre du tableau');
+		$table->setDataHeader(array('Prenom','Nom','Bureau', 'Habilitations'));
 		$table->setDataRow($data);
 
-		$table_view = $this->registry->TableComponent->createView('table_default');
+		$table_view = $table->createView('table_default');
 		$this->registry->template->content = $table_view;
 
 		$this->registry->template->show();

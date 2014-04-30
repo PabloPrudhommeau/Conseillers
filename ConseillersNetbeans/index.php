@@ -18,18 +18,26 @@ foreach ($conf_files as $val) {
 	}
 }
 
+/* * * include the registry class ** */
+include __SITE_PATH . '/application/core/Registry.class.php';
+
+
 // Fichiers d'inclusion
 $include_files = array_diff(scandir('include/'), array('.', '..'));
-
 foreach ($include_files as $val) {
 	include(__SITE_PATH . '/include/' . $val);
 }
 
-/* * * load the router ** */
+$registry = new Registry();
+
+//Instanciation des classes du core
 $registry->router = new Router($registry);
-/* * * load up the template ** */
 $registry->template = new Template($registry);
 
+//Instanciation des classes global
+$registry->Authentification = new Authentification($registry);
+
+//Appel et déclanchement du routage de l'URL vers les controller
 $registry->router->route();
 
 ?>

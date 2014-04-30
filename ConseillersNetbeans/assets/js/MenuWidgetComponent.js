@@ -9,11 +9,11 @@ $(document).ready(function() {
 	});
 	$('.widget-menu-feature-list li').hover(function(){
 			$(this).stop().animate({
-				backgroundColor : "#b1d6d6"
+				backgroundColor : "#dcf1ce"
 			}, 100);
 		}, function(){
 			$(this).stop().animate({
-				backgroundColor : "#ccc"
+				backgroundColor : "#ddd"
 			},100);
 		});
 });

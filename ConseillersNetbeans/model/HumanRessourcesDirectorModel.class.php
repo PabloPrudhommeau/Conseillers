@@ -2,7 +2,7 @@
 
 class HumanRessourcesDirectorModel {
 
-	public function getDatas() {
+	public function getData() {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT COUNT( c.id_enseignant_chercheur ) AS nbetu, ec.prenom, ec.nom, ec.bureau, lp.libelle
 								FROM conseiller AS c
