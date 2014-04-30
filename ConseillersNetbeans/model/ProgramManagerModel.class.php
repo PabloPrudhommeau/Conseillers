@@ -2,7 +2,7 @@
 
 class ProgramManagerModel {
 
-	public function getDatas() {
+	public function getData() {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT DISTINCT ec.id, ec.prenom, ec.nom, ec.bureau, lp.libelle
 								FROM enseignant_chercheur AS ec

@@ -9,7 +9,6 @@ class Router {
 
 	function __construct($registry) {
 		$this->registry = $registry;
-		$this->registry->loadComponent('Authentification');
 	}
 
 	public function route() {
@@ -29,7 +28,6 @@ class Router {
 
 	private function call($controller_name, $action_name) {
 		require_once __SITE_PATH . '/controller/' . $controller_name . '.class.php';
-		require_once 'FrontController.class.php';
 		$front_controller = new FrontController();
 		$front_controller->load($this->registry);
 		$controller = new $controller_name($this->registry);
@@ -37,10 +35,10 @@ class Router {
 	}
 
 	private function applyRouteWithSecurity() {
-		$authentification_component = $this->registry->AuthentificationComponent;
+		$authentification = $this->registry->Authentification;
 		$controller_object = $this->read($this->controller_name);
 
-		if ($controller_object->isSecure() && !$authentification_component->isLogOn()) {
+		if ($controller_object->isSecure() && !$authentification->isLogOn()) {
 			$this->call('ErrorController', 'restricted');
 		} else {
 			$this->call($this->controller_name, $this->action);
@@ -48,9 +46,7 @@ class Router {
 	}
 
 	private function getController() {
-
 		$route = (empty($_GET['route'])) ? '' : $_GET['route'];
-
 		if (!empty($route)) {
 			$parts = explode('/', $route);
 			$controller = ucfirst($parts[0]);

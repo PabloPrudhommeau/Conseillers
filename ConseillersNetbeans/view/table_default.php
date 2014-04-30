@@ -1,41 +1,45 @@
-<table>
-	<?php
-	foreach($table_header as $val) {
-		?>
-		<tr>
+<table class="table-default">
+	<caption><?php echo $caption; ?></caption>
+	<tr>
 		<?php
-		for($i = 0; $i < count($val); $i += 2) {
+		foreach ($table_header as $val) {
 			?>
-			<th colspan="<?php echo $val[$i+1]; ?>"><?php echo $val[$i] ?></th>
-			<?php			
+			<th><?php echo $val; ?></th>
+			<?php
 		}
 		?>
-		</tr>
-		<?php
-	}
-	?>
+	</tr>
 	<?php
-	foreach($table_data as $data_row) {
+	foreach ($table_data as $key => $data_row) {
 		?>
-		<tr class="table-row">
-		<?php
-		foreach($data_row as $data_cell) {
-			if(is_array($data_cell)) {
-				foreach ($data_cell as $value) {
+		<tr class="table-row" id="etudiant_<?php echo $key; ?>">
+			<?php
+			foreach ($data_row as $data_cell) {
+				if (is_array($data_cell)) {
 					?>
-					<td><?php echo $value; ?> </td>
+					<td>
+						<table>
+							<tr>
+								<?php
+								foreach ($data_cell as $value) {
+									?>
+									<td><?php echo $value; ?> </td>
+									<?php
+								}
+								?>
+							</tr>
+						</table>
+					</td>
+					<?php
+				} else {
+					?>
+					<td> <?php echo $data_cell; ?> </td>
 					<?php
 				}
-			} else {
-				?>
-				<td> <?php echo $data_cell; ?> </td>
-				<?php
 			}
-		}
-		?>
+			?>
 		</tr>
 		<?php
 	}
-
 	?>
 </table>

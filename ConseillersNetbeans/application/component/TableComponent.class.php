@@ -5,6 +5,10 @@ class TableComponent extends BaseComponent {
 	private $data_header = array();
 	private $data_row = array();
 	
+	public function setCaption($title){
+		$this->caption = $title;
+	}
+	
 	public function setDataRow($arr = array()) {
 		$this->data_row = $arr;
 	}
