@@ -65,7 +65,7 @@ class ProgramManagerModel {
 		$query = $db->query('SELECT id FROM liste_pole WHERE libelle="'.$groupe.'"');
 		$id_group = $query->fetch();
 
-		$query = $db->query('SELECT id FROM enseignant_chercheur WHERE id_pole='.$id_group->id.);
+		$query = $db->query('SELECT id FROM enseignant_chercheur WHERE id_pole='.$id_group->id);
 		$id_teacher = $query->fetchAll();
 
 		foreach($id_teacher as $value) {
