@@ -175,9 +175,7 @@ class EducationServiceModel {
 			$found = false;
 			$i++;
 		}
-
-
-		return $assign_logs;
+		return $this->getData();
 	}
 
 }
