@@ -18,6 +18,21 @@ class EducationServiceModel {
 		return $row;
 	}
 
+	public function getOrphan() {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT 	etu.nom AS student_name,
+										etu.prenom AS student_surname,
+										CONCAT(p.libelle, etu.semestre) AS formation
+								FROM etudiant AS etu
+								LEFT OUTER JOIN conseiller AS c ON (c.id_etudiant=etu.id)
+								LEFT JOIN liste_programme AS p ON 		(p.id=etu.id_programme)
+								WHERE c.id_etudiant is NULL'
+				);
+		$row = $query->fetchAll();
+
+		return $row;
+	}
+
 	public function deleteStudent($student_name, $student_surname) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT c.id_etudiant FROM etudiant AS etu
@@ -69,6 +84,59 @@ class EducationServiceModel {
 		return $this->getData();
 	}
 
+	public function formationTransfert($student_name, $student_surname, $formation_transfert) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT id FROM liste_programme
+								WHERE libelle="'.$formation_transfert.'"'
+				);
+		$id_formation_transfert = $query->fetch();
+
+		$query = $db->query('	SELECT id FROM etudiant
+										WHERE nom="'.$student_name.'"
+										AND prenom="'.$student_surname.'"'
+						);
+		$id_student = $query->fetch();
+
+		$query = $db->query('	SELECT 	ec.id,
+										h.id_programme
+								FROM etudiant AS etu
+								LEFT JOIN conseiller AS c ON 			(c.id_etudiant=etu.id)
+								LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
+								LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
+								WHERE etu.id='.$id_student->id
+				);
+		$id_conseilor = $query->fetchAll();
+
+		$authorized = false;
+
+		if($id_conseilor) {
+			foreach ($id_conseilor as $value) {
+				if($value->id_programme == $id_formation_transfert) {
+					$authorized = true;
+					break;
+				}
+			}
+
+			$db->exec('UPDATE etudiant SET id_programme='.$id_formation_transfert->id.' WHERE id='.$id_student->id);
+
+			if(!$authorized) {
+				$db->exec('DELETE FROM conseiller WHERE id_etudiant='.$id_student->id);
+				return $this->assignNewStudent($student_name, $student_surname);
+			} else {
+				return $this->getData();
+			}
+		} else {
+			return $this->assignNewStudent($student_name, $student_surname);
+		}
+	}
+
+	public function addStudents($file) {
+		/*
+		 * Ajout d'enseignants pas injection CSV
+		 * Définir si le fichier est lu ici ou avant (idem pour l'upload)
+		 */
+	}
+
 	public function getFormation() {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT libelle FROM liste_programme
@@ -87,7 +155,7 @@ class EducationServiceModel {
 		return $this->getData();
 	}
 
-	public function assignNewStudent($name, $firstname) {
+	public function assignNewStudent($student_name, $student_surname) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT 	ec.id AS ec_id, 
 										etu.id AS etu_id,
@@ -96,12 +164,11 @@ class EducationServiceModel {
 										enseignant_chercheur AS ec
 								LEFT JOIN conseiller AS c ON (c.id_enseignant_chercheur=ec.id)
 								LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
-								WHERE etu.nom="SYRIAN"
-								AND etu.prenom="Hafar"
+								WHERE etu.nom="'.$student_name.'"
+								AND etu.prenom="'.$student_surname.'"
 								AND etu.id_programme=h.id_programme
 								GROUP BY(c.id_enseignant_chercheur)
-								ORDER BY nbetu ASC
-								LIMIT 0,1'
+								ORDER BY nbetu ASC'
 				);
 		$row = $query->fetch();
 

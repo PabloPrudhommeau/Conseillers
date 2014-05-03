@@ -19,7 +19,7 @@ class HumanRessourcesDirectorController extends BaseController {
 		$data = $humanRessourcesDirector->getData();
 
 		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array('Nombre d\'étudiants conseillés', 'Prenom', 'Nom', 'Bureau', 'Pole'));
+		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
 
 		$table_view = $table->createView('table_default');
