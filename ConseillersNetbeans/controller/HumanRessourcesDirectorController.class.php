@@ -20,15 +20,19 @@ class HumanRessourcesDirectorController extends BaseController {
 
 		$button = $this->registry->newComponent('ButtonWidget');
 		$button->setImage('plus.gif');
-		$button->setOnClick('showHideRow(\'table-hidden-row\')');
+		$button->setAction('showHideElement(\'#table-hidden-row\')');
+		$button->setLabel('Ajouter enseignant');
+		$content = $button->createView();
+		
+		$content .= '<br/>';
 
 		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole', $button->createView()));
+		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
 		$table->setHiddenRow(array('Prenom', 'Nom', 'Bureau', $humanRessourcesDirector->getPole()));
-
-		$table_view = $table->createView('table_manage_data');
-		$this->registry->template->content = $table_view;
+		$content .= $table->createView('table_manage_data');
+		
+		$this->registry->template->content = $content;
 
 		$this->registry->template->show();
 	}

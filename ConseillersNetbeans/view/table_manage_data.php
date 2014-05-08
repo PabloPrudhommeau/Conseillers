@@ -29,7 +29,7 @@
 					<?php
 				} else {
 					?>
-					<input class="table-manage-data" size="auto" type="text" name="<?php echo $data_row; ?>" />
+					<input class="table-manage-data" type="text" name="<?php echo $data_row; ?>" />
 					<?php
 				}
 				?>

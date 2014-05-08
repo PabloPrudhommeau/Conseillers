@@ -92,13 +92,11 @@ table.table-default tr:nth-child(odd) {
 table.table-default td, th {
 	padding:5px 15px;
 	text-align:left;
-	width: 120px;
 }
 table.table-default img {
 	vertical-align:middle;
 	margin-left:5px;
 }
-
 table.table-manage-data tr:nth-child(odd) {
 	background: #dcf1ce;
 }
@@ -108,7 +106,6 @@ table.table-manage-data tr:nth-child(even) {
 table.table-manage-data td, th {
 	padding:5px 15px;
 	text-align:left;
-	width: 120px;
 }
 table.table-manage-data th {
 	background:white;
@@ -119,17 +116,23 @@ table.table-manage-data img {
 }
 table.table-manage-data input, select {
 	width: 95px;
+	padding:0;
 }
-
-
 #table-hidden-row {
 	display:none;
 	background-color: #E9FFDA;
 }
 
 /* Widget Button Default */
-img.widget-button-default {
+.widget-button-default {
 	cursor:pointer;
+}
+.widget-button-default td, .widget-button-default img{
+	vertical-align:middle;
+	padding:0 3px 0 0;
+}
+.widget-button-default img{
+	margin-top:-1px;
 }
 /* Widget Button Classic */
 button.widget-button-classic {

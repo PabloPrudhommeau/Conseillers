@@ -73,7 +73,7 @@ class EducationServiceController extends BaseController {
 
 	public function assignNewStudentAjax() {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-			$ajax = $button = $this->registry->newComponent('Ajax');
+			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
 			if (isset($data['name']) && isset($data['first_name'])) {
 				$education_service = $this->registry->newModel('EducationService');
@@ -89,8 +89,9 @@ class EducationServiceController extends BaseController {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$education_service = $this->registry->newModel('EducationService');
 			$data = $education_service->assignNewStudents();
+			$content .= '<br/>';
 			foreach ($data as $val) {
-				$content .= '+ Ajout du conseiller <b>' . $val->ec_nom . '</b> pour l\'étudiant ' . $val->etu_nom . ' ' . $val->etu_prenom . '<br/>';
+				$content .= '* Ajout du conseiller <b>' . $val['academic_researcher_surname'] . ' ' . $val['academic_researcher_name'] . '</b> pour l\'étudiant ' . $val['student_surname'] . ' ' . $val['student_name'] . '<br/>';
 			}
 			echo $content;
 		}
