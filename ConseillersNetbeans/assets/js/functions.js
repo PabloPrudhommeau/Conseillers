@@ -19,6 +19,7 @@ function ajax_send(target, datas, return_to_div) {
 function showHideElement(element) {
 	$(document).ready(function() {
 		if (typeof $(element).css('display') === 'undefined' || $(element).css('display') === 'none') {
+		
 			$(element).fadeIn(200);
 		} else {
 			$(element).stop().fadeOut(200);

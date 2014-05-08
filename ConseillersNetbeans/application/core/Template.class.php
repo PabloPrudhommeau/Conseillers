@@ -8,9 +8,8 @@ class Template {
 
 	public function __construct($registry) {
 		$this->registry = $registry;
-	
+
 		$this->defaults();
-		
 	}
 
 	public function __set($index, $value) {
@@ -22,19 +21,15 @@ class Template {
 		$this->page_first_title = __TEMPLATE_DEFAULT_FIRST_TITLE;
 	}
 
-	public function show() {
-		if (!in_array('base', $this->vars)) {
-			$this->base = __SITE_PATH . '/view/' . __TEMPLATE_DEFAULT_VIEW . '.php';
-		} else {
-			$this->base = __SITE_PATH . '/view/' . $this->vars['base'] . '.php';
-		}
+	public function show($base = __TEMPLATE_DEFAULT_VIEW) {
+		$this->base = __SITE_PATH . '/view/' . $base . '.php';
 
 		if (file_exists($this->base) == false) {
 			throw new Exception('Le template demandé n\'existe pas : ' . $this->base);
 		}
 
 		foreach ($this->vars as $key => $value) {
-			$$key = $value ;
+			$$key = $value;
 		}
 
 		include ($this->base);

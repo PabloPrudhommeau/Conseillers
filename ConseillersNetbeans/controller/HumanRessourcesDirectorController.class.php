@@ -11,8 +11,8 @@ class HumanRessourcesDirectorController extends BaseController {
 		$this->registry->template->content = 'TODO : liste des fonctionnalités';
 		$this->registry->template->show();
 	}
-	
-	public function manageResearcher(){
+
+	public function manageResearcher() {
 		$this->registry->template->page_first_title = 'Gestion des enseignants chercheurs';
 
 		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
@@ -22,19 +22,59 @@ class HumanRessourcesDirectorController extends BaseController {
 		$button->setImage('plus.gif');
 		$button->setAction('showHideElement(\'#table-hidden-row\')');
 		$button->setLabel('Ajouter enseignant');
-		$content = $button->createView();
-		
+		$content = $button->createView('widget_button_advanced');
+
 		$content .= '<br/>';
+
+		$input_name = $this->registry->newComponent('Input');
+		$input_name->setClass('table-manage-data');
+		$input_name->setId('academic-rechearcher-name');
+		$input_surname = $this->registry->newComponent('Input');
+		$input_surname->setClass('table-manage-data');
+		$input_surname->setId('academic-rechearcher-surname');
+		$input_office = $this->registry->newComponent('Input');
+		$input_office->setClass('table-manage-data');
+		$select_area = $this->registry->newComponent('Select');
+		$select_area->setOption($humanRessourcesDirector->getArea());
 
 		$table = $this->registry->newComponent('Table');
 		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
-		$table->setHiddenRow(array('Prenom', 'Nom', 'Bureau', $humanRessourcesDirector->getPole()));
-		$content .= $table->createView('table_manage_data');
-		
-		$this->registry->template->content = $content;
+		$table->setHiddenRow(array($input_name->createView(),
+			$input_surname->createView(),
+			$input_office->createView(),
+			$select_area->createView(),
+			$button_validation->createView()
+		));
 
+		$ajax_content = $this->registry->newComponent('DivWidget');
+		$ajax_content->setClass('ajax-return');
+		$ajax_content->setContent($table->createView('table_manage_data'));
+
+		$content .= $ajax_content->createView();
+
+		$this->registry->template->content = $content;
 		$this->registry->template->show();
+	}
+
+	/* Méthodes appellées via ajax */
+	/*	 * **************************** */
+
+	public function addAcademicResearcher() {
+		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			$ajax = $button = $this->registry->newComponent('Ajax');
+			$data = $ajax->interceptData();
+			if (isset($data['name']) && isset($data['first_name'])) {
+				$education_service = $this->registry->newModel('EducationService');
+				$education_service->assignNewStudent($data['name'], $data['first_name']);
+				$data = $education_service->getData();
+				echo $this->buildAssignNewStudentTable($data);
+			}
+		}
+	}
+
+	public function controlAvailability() {
+		//if($_SERVER['HTTP_X_REQUESTED_WITH'])
 	}
 
 }

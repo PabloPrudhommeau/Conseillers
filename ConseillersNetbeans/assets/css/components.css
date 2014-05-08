@@ -127,13 +127,19 @@ table.table-manage-data input, select {
 .widget-button-default {
 	cursor:pointer;
 }
-.widget-button-default td, .widget-button-default img{
+
+/* Widget Button Advanced */
+.widget-button-advanced {
+	cursor:pointer;
+}
+.widget-button-advanced td, .widget-button-advanced img{
 	vertical-align:middle;
 	padding:0 3px 0 0;
 }
-.widget-button-default img{
+.widget-button-advanced img{
 	margin-top:-1px;
 }
+
 /* Widget Button Classic */
 button.widget-button-classic {
 	background: #dcf1ce;

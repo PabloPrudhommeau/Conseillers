@@ -32,18 +32,11 @@ $(document).ready(function() {
 	});
 });
 
-//Widget Bouton Default
+//Widget Bouton 
 $(document).ready(function() {
-	$(document).on('click', '.widget-button-default', function() {
+	$(document).on('click', '.widget-button-default, .widget-button-classic, .widget-button-advanced', function() {
 		var action = decodeURIComponent($(this).attr('action'));
-		eval(action);
-	});
-});
-
-//Widget Bouton Default
-$(document).ready(function() {
-	$(document).on('click', '.widget-button-classic', function() {
-		var action = decodeURIComponent($(this).attr('action'));
+		alert($(this).attr('action'));
 		eval(action);
 	});
 });

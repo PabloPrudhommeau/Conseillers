@@ -78,7 +78,6 @@ class EducationServiceController extends BaseController {
 			if (isset($data['name']) && isset($data['first_name'])) {
 				$education_service = $this->registry->newModel('EducationService');
 				$education_service->assignNewStudent($data['name'], $data['first_name']);
-				$education_service = $this->registry->newModel('EducationService');
 				$data = $education_service->getData();
 				echo $this->buildAssignNewStudentTable($data);
 			}
