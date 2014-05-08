@@ -120,11 +120,15 @@ table.table-manage-data img {
 table.table-manage-data input, select {
 	width: 95px;
 }
-
+tr#table-hidden-row.valide-row {
+	background-color: #E9FFDA;
+}
+tr#table-hidden-row.invalide-row {
+	background-color: #D04141;
+}
 
 #table-hidden-row {
 	display:none;
-	background-color: #E9FFDA;
 }
 
 /* Widget Button Default */

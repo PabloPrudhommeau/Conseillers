@@ -9,7 +9,7 @@
 		}
 		?>
 	</tr>
-	<tr class="table-row" id="table-hidden-row">
+	<tr class="<?php echo $hidden_row_class; ?>" id="table-hidden-row">
 		<?php
 		foreach($table_hidden_data as $data_row) {
 			?>
