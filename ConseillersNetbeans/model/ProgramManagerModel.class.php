@@ -37,6 +37,63 @@ class ProgramManagerModel {
 		
 		return $data;
 	}
+
+	public function addAuthorization($teacher_name, $teacher_surname, $label_authorization) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT id FROM enseignant_chercheur
+								WHERE nom="'.$teacher_name.'"
+								AND prenom="'.$teacher_surname.'"'
+				);
+		$id_teacher = $query->fetch();
+
+		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="'.$label_authorization.'"');
+		$id_authorization = $query->fetch();
+
+		$db->exec('INSERT INTO habilitation(id_enseignant_chercheur, id_programme) VALUES(
+																						`'.$id_teacher->id.'`,
+																						`'.$id_authorization->id.'`)'
+		);
+
+		return $this->getData();
+	}
+
+	public function addHabilitationByGroup($group, $label_authorization) {
+		$db = Database::getInstance();
+		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="'.$label_authorization.'"');
+		$id_authorization = $query->fetch();
+
+		$query = $db->query('SELECT id FROM liste_pole WHERE libelle="'.$groupe.'"');
+		$id_group = $query->fetch();
+
+		$query = $db->query('SELECT id FROM enseignant_chercheur WHERE id_pole='.$id_group->id);
+		$id_teacher = $query->fetchAll();
+
+		foreach($id_teacher as $value) {
+			$db->exec('INSERT INTO habilitation(id_enseignant_chercheur, id_programme) VALUES(
+																							`'.$value->id.'`,
+																							`'.$id_authorization->id.'`)'
+			);
+		}
+
+		return $this->getData();
+	} 
+
+	public function deleteAuthorization($teacher_name, $teacher_surname, $label_authorization) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT id FROM enseignant_chercheur
+								WHERE nom="'.$teacher_name.'"
+								AND prenom="'.$teacher_surname.'"'
+				);
+		$id_teacher = $query->fetch();
+
+		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="'.$label_authorization.'"');
+		$id_authorization = $query->fetch();
+
+		$db->exec('DELETE FROM habilitation WHERE id_enseignant_chercheur='.$id_teacher->id.' AND id_programme='.$id_authorization->id);
+
+		return $this->getData();
+	}
+
 }
 
 ?>

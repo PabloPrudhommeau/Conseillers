@@ -33,7 +33,7 @@ class EducationServiceController extends BaseController {
 		}
 
 		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array('Prenom', 'Nom', 'Formation', 'Conseillé habilité'));
+		$table->setDataHeader(array('Prenom', 'Nom', 'Formation', 'Conseillé assigné'));
 		$table->setDataRow($data);
 		$table_view = $table->createView('table_default');
 

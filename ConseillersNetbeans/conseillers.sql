@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Mar 29 Avril 2014 à 18:07
+-- Généré le: Ven 02 Mai 2014 à 15:15
 -- Version du serveur: 5.6.12-log
 -- Version de PHP: 5.4.12
 
@@ -54,8 +54,6 @@ INSERT INTO `compte` (`login`, `password`, `id_statut`) VALUES
 CREATE TABLE IF NOT EXISTS `conseiller` (
   `id_enseignant_chercheur` int(11) NOT NULL,
   `id_etudiant` int(11) NOT NULL,
-  `date_deb` date NOT NULL,
-  `date_fin` date NOT NULL,
   PRIMARY KEY (`id_enseignant_chercheur`,`id_etudiant`),
   UNIQUE KEY `id_etudiant` (`id_etudiant`),
   KEY `id_enseignant_chercheur` (`id_enseignant_chercheur`)
@@ -65,22 +63,37 @@ CREATE TABLE IF NOT EXISTS `conseiller` (
 -- Contenu de la table `conseiller`
 --
 
-INSERT INTO `conseiller` (`id_enseignant_chercheur`, `id_etudiant`, `date_deb`, `date_fin`) VALUES
-(1, 1, '2014-04-01', '2014-04-30'),
-(1, 11, '2014-04-20', '2014-10-09'),
-(1, 27, '2014-08-01', '2014-12-20'),
-(2, 23, '2014-04-01', '2014-04-30'),
-(3, 6, '2014-04-01', '2014-05-17'),
-(4, 9, '2014-04-21', '2014-08-06'),
-(4, 10, '2014-04-21', '2015-03-12'),
-(5, 16, '2014-08-04', '2015-08-05'),
-(6, 21, '2014-08-12', '2014-09-12'),
-(6, 24, '2014-04-22', '2014-09-12'),
-(7, 15, '2014-04-21', '2014-12-16'),
-(7, 29, '2014-04-21', '2014-11-01'),
-(8, 18, '2014-04-06', '2014-11-15'),
-(9, 30, '2014-04-05', '2014-07-10'),
-(10, 22, '2014-04-08', '2014-08-08');
+INSERT INTO `conseiller` (`id_enseignant_chercheur`, `id_etudiant`) VALUES
+(1, 1),
+(52, 2),
+(10, 3),
+(2, 4),
+(8, 5),
+(3, 6),
+(6, 7),
+(9, 8),
+(4, 9),
+(4, 10),
+(1, 11),
+(5, 12),
+(8, 13),
+(3, 14),
+(7, 15),
+(5, 16),
+(5, 17),
+(8, 18),
+(9, 19),
+(52, 20),
+(6, 21),
+(10, 22),
+(2, 23),
+(6, 24),
+(3, 25),
+(7, 26),
+(1, 27),
+(4, 28),
+(7, 29),
+(9, 30);
 
 -- --------------------------------------------------------
 
@@ -203,6 +216,9 @@ INSERT INTO `habilitation` (`id_enseignant_chercheur`, `id_programme`) VALUES
 (8, 3),
 (10, 3),
 (6, 4),
+(8, 4),
+(10, 4),
+(52, 4),
 (1, 5),
 (6, 5),
 (52, 5),
@@ -264,7 +280,7 @@ INSERT INTO `liste_programme` (`id`, `libelle`) VALUES
 
 CREATE TABLE IF NOT EXISTS `liste_statut` (
   `id` tinyint(4) NOT NULL,
-  `libelle` varchar(25) NOT NULL,
+  `libelle` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -273,9 +289,29 @@ CREATE TABLE IF NOT EXISTS `liste_statut` (
 --
 
 INSERT INTO `liste_statut` (`id`, `libelle`) VALUES
-(1, 'resp'),
-(2, 'drh'),
-(3, 'scol');
+(1, 'responsable_programme'),
+(2, 'directeur_ressources_humaine'),
+(3, 'service_scolarite');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `resp_programme`
+--
+
+CREATE TABLE IF NOT EXISTS `resp_programme` (
+  `identifiant` varchar(50) NOT NULL,
+  `id_programme` tinyint(4) NOT NULL,
+  PRIMARY KEY (`identifiant`,`id_programme`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `resp_programme`
+--
+
+INSERT INTO `resp_programme` (`identifiant`, `id_programme`) VALUES
+('resp', 2),
+('resp', 3);
 
 --
 -- Contraintes pour les tables exportées
@@ -319,6 +355,12 @@ ALTER TABLE `habilitation`
   ADD CONSTRAINT `habilitation_ibfk_2` FOREIGN KEY (`id_programme`) REFERENCES `liste_programme` (`id`),
   ADD CONSTRAINT `habilitation_ibfk_3` FOREIGN KEY (`id_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`id`),
   ADD CONSTRAINT `habilitation_ibfk_4` FOREIGN KEY (`id_programme`) REFERENCES `liste_programme` (`id`);
+
+--
+-- Contraintes pour la table `resp_programme`
+--
+ALTER TABLE `resp_programme`
+  ADD CONSTRAINT `resp_programme_ibfk_1` FOREIGN KEY (`identifiant`) REFERENCES `compte` (`login`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
