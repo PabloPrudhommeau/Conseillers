@@ -87,15 +87,44 @@ table.table-default tr:nth-child(even) {
 	background: #dcf1ce;
 }
 table.table-default tr:nth-child(odd) {
-	background: #fff
+	background: #fff;
 }
 table.table-default td, th {
 	padding:5px 15px;
 	text-align:left;
+	width: 120px;
 }
 table.table-default img {
 	vertical-align:middle;
 	margin-left:5px;
+}
+
+table.table-manage-data tr:nth-child(odd) {
+	background: #dcf1ce;
+}
+table.table-manage-data tr:nth-child(even) {
+	background: #fff;
+}
+table.table-manage-data td, th {
+	padding:5px 15px;
+	text-align:left;
+	width: 120px;
+}
+table.table-manage-data th {
+	background:white;
+}
+table.table-manage-data img {
+	vertical-align:middle;
+	margin-left:5px;
+}
+table.table-manage-data input, select {
+	width: 95px;
+}
+
+
+#table-hidden-row {
+	display:none;
+	background-color: #E9FFDA;
 }
 
 /* Widget Button Default */

@@ -69,6 +69,14 @@ class HumanRessourcesDirectorModel {
 		return $this->getData();
 	}
 
+	public function getPole() {
+		$db = Database::getInstance();
+		$query = $db->query('SELECT libelle FROM liste_pole');
+		$row = $query->fetchAll();
+
+		return $row;
+	}
+
 	public function addAcademicResearchers($file) {
 		/*
 		 * Ajout d'enseignants pas injection CSV

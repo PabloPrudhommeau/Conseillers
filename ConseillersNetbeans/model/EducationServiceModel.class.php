@@ -172,7 +172,8 @@ class EducationServiceModel {
 				);
 		$row = $query->fetch();
 
-		$query->exec('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES('.$row->ec_id.','.$row->etu_id.')');
+		$st = $db->prepare('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES('.$row->ec_id.','.$row->etu_id.')');
+		$st->execute();
 
 		return $this->getData();
 	}

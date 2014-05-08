@@ -13,16 +13,21 @@ class HumanRessourcesDirectorController extends BaseController {
 	}
 	
 	public function manageResearcher(){
-		$this->registry->template->page_first_title = "Gestion des enseignants chercheurs";
+		$this->registry->template->page_first_title = 'Gestion des enseignants chercheurs';
 
 		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
 		$data = $humanRessourcesDirector->getData();
 
-		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole'));
-		$table->setDataRow($data);
+		$button = $this->registry->newComponent('ButtonWidget');
+		$button->setImage('plus.gif');
+		$button->setOnClick('showHideRow(\'table-hidden-row\')');
 
-		$table_view = $table->createView('table_default');
+		$table = $this->registry->newComponent('Table');
+		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole', $button->createView()));
+		$table->setDataRow($data);
+		$table->setHiddenRow(array('Prenom', 'Nom', 'Bureau', $humanRessourcesDirector->getPole()));
+
+		$table_view = $table->createView('table_manage_data');
 		$this->registry->template->content = $table_view;
 
 		$this->registry->template->show();

@@ -47,3 +47,24 @@ $(document).ready(function(){
 		eval(action);
 	});
 });
+
+//Table_*
+$(document).ready(function() {
+	$('table.table-manage-data input').blur(function(){
+		$.ajax({
+			url: "../controller/HumanRessourcesDirectorController.class.php",
+			context: document.body
+		}).done(function(){
+			window.alert('jlksqfhdjh');
+		});
+	});
+});
+
+function showHideRow(row, button) {
+	row = document.getElementById(row);
+	if(row.style.display == "none" || row.style.display == "") {
+		row.style.display = "table-row";
+	} else {
+		row.style.display = "none";
+	}
+}

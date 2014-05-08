@@ -17,12 +17,8 @@ class TableComponent extends BaseComponent {
 		$this->data_header = $arr;
 	}
 
-	public function addRow() {
-
-	}
-
-	public function addHeader() {
-
+	public function setHiddenRow($arr = array()) {
+		$this->hidden_data_row = $arr;
 	}
 
 	public function getHeader() {
@@ -36,6 +32,7 @@ class TableComponent extends BaseComponent {
 	public function createView($template = 'table_default') {
 		$this->table_header = $this->data_header;
 		$this->table_data = $this->data_row;
+		$this->table_hidden_data = $this->hidden_data_row;
 		return parent::createView($template);
 	}
 
