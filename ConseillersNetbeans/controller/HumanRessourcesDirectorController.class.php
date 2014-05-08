@@ -11,8 +11,8 @@ class HumanRessourcesDirectorController extends BaseController {
 		$this->registry->template->content = 'TODO : liste des fonctionnalités';
 		$this->registry->template->show();
 	}
-	
-	public function manageResearcher(){
+
+	public function manageResearcher() {
 		$this->registry->template->page_first_title = 'Gestion des enseignants chercheurs';
 
 		$json_ajax_data = json_encode(array('name' => $val->etu_nom, 'surname' => $val->etu_prenom));
@@ -22,7 +22,22 @@ class HumanRessourcesDirectorController extends BaseController {
 
 		$button = $this->registry->newComponent('ButtonWidget');
 		$button->setImage('plus.gif');
-		$button->setOnClick('showHideRow(\'table-hidden-row\')');
+		$button->setAction('showHideElement(\'#table-hidden-row\')');
+		$button->setLabel('Ajouter enseignant');
+		$content = $button->createView('widget_button_advanced');
+
+		$content .= '<br/>';
+
+		$input_name = $this->registry->newComponent('Input');
+		$input_name->setClass('table-manage-data');
+		$input_name->setId('academic-rechearcher-name');
+		$input_surname = $this->registry->newComponent('Input');
+		$input_surname->setClass('table-manage-data');
+		$input_surname->setId('academic-rechearcher-surname');
+		$input_office = $this->registry->newComponent('Input');
+		$input_office->setClass('table-manage-data');
+		$select_area = $this->registry->newComponent('Select');
+		$select_area->setOption($humanRessourcesDirector->getArea());
 
 		$input_name = $this->registry->newComponent('Input');
 		$input_name->setClass('table-manage-data');
@@ -41,7 +56,7 @@ class HumanRessourcesDirectorController extends BaseController {
 		$select_area->setOption($humanRessourcesDirector->getArea());
 
 		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole', $button->createView()));
+		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
 		$table->setHiddenRow(array(	$input_name->createView(), 
 									$input_surname->createView(), 
@@ -49,9 +64,13 @@ class HumanRessourcesDirectorController extends BaseController {
 									$select_area->createView()
 							));
 
-		$table_view = $table->createView('table_manage_data');
-		$this->registry->template->content = $table_view;
+		$ajax_content = $this->registry->newComponent('DivWidget');
+		$ajax_content->setClass('ajax-return');
+		$ajax_content->setContent($table->createView('table_manage_data'));
 
+		$content .= $ajax_content->createView();
+
+		$this->registry->template->content = $content;
 		$this->registry->template->show();
 	}
 
