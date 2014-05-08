@@ -105,6 +105,7 @@ class HumanRessourcesDirectorController extends BaseController {
 												$input_office->createView(), 
 												$select_area->createView()
 										));
+					$table->setHiddenRowClass('shown-row invalide-row');
 
 					$table_view = $table->createView('table_manage_data');
 					$this->registry->template->content = $table_view;

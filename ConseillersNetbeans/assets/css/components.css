@@ -120,15 +120,18 @@ table.table-manage-data img {
 table.table-manage-data input, select {
 	width: 95px;
 }
-tr#table-hidden-row.valide-row {
+/*tr#table-hidden-row.valide-row {
 	background-color: #E9FFDA;
 }
 tr#table-hidden-row.invalide-row {
 	background-color: #D04141;
+}*/
+tr#table-hidden-row.hidden-row {
+	display: none;
 }
-
-#table-hidden-row {
-	display:none;
+tr#table-hidden-row.shown-row {
+	display: table-row;
+}
 }
 
 /* Widget Button Default */
