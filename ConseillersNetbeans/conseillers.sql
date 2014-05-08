@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Ven 02 Mai 2014 à 15:15
+-- Généré le: Jeu 08 Mai 2014 à 12:18
 -- Version du serveur: 5.6.12-log
 -- Version de PHP: 5.4.12
 
@@ -65,13 +65,12 @@ CREATE TABLE IF NOT EXISTS `conseiller` (
 
 INSERT INTO `conseiller` (`id_enseignant_chercheur`, `id_etudiant`) VALUES
 (1, 1),
-(52, 2),
 (10, 3),
 (2, 4),
 (8, 5),
 (3, 6),
 (6, 7),
-(9, 8),
+(52, 8),
 (4, 9),
 (4, 10),
 (1, 11),
@@ -83,7 +82,6 @@ INSERT INTO `conseiller` (`id_enseignant_chercheur`, `id_etudiant`) VALUES
 (5, 17),
 (8, 18),
 (9, 19),
-(52, 20),
 (6, 21),
 (10, 22),
 (2, 23),
@@ -211,6 +209,7 @@ INSERT INTO `habilitation` (`id_enseignant_chercheur`, `id_programme`) VALUES
 (52, 1),
 (1, 2),
 (8, 2),
+(9, 2),
 (3, 3),
 (6, 3),
 (8, 3),
