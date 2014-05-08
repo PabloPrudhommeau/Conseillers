@@ -12,11 +12,8 @@ class EducationServiceController extends BaseController {
 		$this->registry->template->show();
 	}
 
-	public function assignNewStudent() {
-		$this->registry->template->page_first_title = 'Gestion des élèves';
+	public function buildAssignNewStudentTable($data) {
 
-		$education_service = $this->registry->newModel('EducationService');
-		$data = $education_service->getData();
 		foreach ($data as $val) {
 			if ($val->ec_nom == "") {
 				$button = $this->registry->newComponent('ButtonWidget');
@@ -25,17 +22,15 @@ class EducationServiceController extends BaseController {
 				$button->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/AssignNewStudentAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
 				$val->ec_nom = $button->createView();
 			}
-			if(preg_match('/TC/',$val->formation)){
+			if (preg_match('/TC/', $val->formation)) {
 				$button_migration = $this->registry->newComponent('ButtonWidget');
 				$json_ajax_data = json_encode(array('name' => $val->etu_nom, 'first_name' => $val->etu_prenom));
 				$button_migration->setImage('migration.png');
-				$button_migration->setSize(16,16);
+				$button_migration->setSize(16, 16);
 				$button_migration->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/AssignNewStudentAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
-				$val->formation = $val->formation. $button_migration->createView();
+				$val->formation = $val->formation . $button_migration->createView();
 			}
 		}
-		
-		
 
 		$table = $this->registry->newComponent('Table');
 		$table->setDataHeader(array('Prenom', 'Nom', 'Formation', 'Conseillé assigné'));
@@ -46,12 +41,19 @@ class EducationServiceController extends BaseController {
 		$ajax_content->setClass('ajax-return');
 		$ajax_content->setContent($table_view);
 
-		$this->registry->template->content = $ajax_content->createView();
+		return $ajax_content->createView();
+	}
+
+	public function assignNewStudent() {
+		$this->registry->template->page_first_title = 'Gestion des élèves';
+		$education_service = $this->registry->newModel('EducationService');
+		$data = $education_service->getData();
+		$this->registry->template->content = $this->buildAssignNewStudentTable($data);
 		$this->registry->template->show();
 	}
 
 	public function assignNewStudents() {
-		$view = 'Voulez vous assigner tous les étudiants orphelins à un conseiller automatiquement ?';
+		$view = 'Voulez vous assigner tous les étudiants orphelins à un conseiller automatiquement ?<br/>';
 		$button = $this->registry->newComponent('ButtonWidget');
 		$button->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/AssignNewStudentsAjax/\',\'\',\'.ajax-return\');');
 		$button->setLabel('Oui, je souhaite assigner tous les étudiants');
@@ -75,8 +77,10 @@ class EducationServiceController extends BaseController {
 			$data = $ajax->interceptData();
 			if (isset($data['name']) && isset($data['first_name'])) {
 				$education_service = $this->registry->newModel('EducationService');
-				$data = $education_service->assignNewStudent($data['name'], $data['first_name']);
-				echo $data;
+				$education_service->assignNewStudent($data['name'], $data['first_name']);
+				$education_service = $this->registry->newModel('EducationService');
+				$data = $education_service->getData();
+				echo $this->buildAssignNewStudentTable($data);
 			}
 		}
 	}
@@ -85,8 +89,8 @@ class EducationServiceController extends BaseController {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$education_service = $this->registry->newModel('EducationService');
 			$data = $education_service->assignNewStudents();
-			foreach ($data as $key => $val) {
-				$content .= 'Ajout de ' . $val . ' dans la colonne ' . $key . '<br/>';
+			foreach ($data as $val) {
+				$content .= '+ Ajout du conseiller <b>' . $val->ec_nom . '</b> pour l\'étudiant ' . $val->etu_nom . ' ' . $val->etu_prenom . '<br/>';
 			}
 			echo $content;
 		}
