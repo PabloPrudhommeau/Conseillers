@@ -118,11 +118,11 @@ table.table-manage-data input, select {
 	width: 95px;
 	padding:0;
 }
-tr#table-hidden-row.valide-row {
+input.valide {
 	background-color: #E9FFDA;
 }
-tr#table-hidden-row.invalide-row {
-	background-color: #D04141;
+input.invalide {
+	background-color: #FF5050;
 }
 
 #table-hidden-row {

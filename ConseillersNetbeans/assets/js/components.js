@@ -36,7 +36,6 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$(document).on('click', '.widget-button-default, .widget-button-classic, .widget-button-advanced', function() {
 		var action = decodeURIComponent($(this).attr('action'));
-		alert($(this).attr('action'));
 		eval(action);
 	});
 });

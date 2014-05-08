@@ -59,14 +59,13 @@ class HumanRessourcesDirectorModel {
 		$query = $db->query('SELECT id FROM liste_pole WHERE libelle="' . $research_group . '"');
 		$id_research_group = $query->fetch();
 
-		$query->exec('INSERT INTO enseignant_chercheur(id_pole, nom, prenom, bureau) VALUES (
-																						`' . $id_research_group->id . '`,
-																						`' . $name . '`,
-																						`' . $surname . '`,
-																						`' . $office . '`)'
-		);
-
-		return $this->getData();
+		$st = $db->prepare('INSERT INTO enseignant_chercheur(nom, prenom, bureau, id_pole) VALUES (																	
+																						\'' . $name . '\',
+																						\'' . $surname . '\',
+																						\'' . $office . '\',
+																						\'' . $id_research_group->id . '\')'
+				);
+		$st->execute();
 	}
 
 	public function getArea() {

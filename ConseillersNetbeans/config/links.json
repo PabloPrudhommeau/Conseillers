@@ -9,7 +9,7 @@
 	"directeur_ressources_humaine": {
 		"home": "/HumanRessourcesDirector/",
 		"features": {
-			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageResearcher/"
+			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageAcademicResearcher/"
 		}
 	},
 	"responsable_programme": {
