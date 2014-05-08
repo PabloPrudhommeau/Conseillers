@@ -18,20 +18,6 @@ class EducationServiceModel {
 		return $row;
 	}
 
-	public function alreadyExists($student_name, $student_surname) {
-		$db = Database::getInstance();
-		$query = $db->query(' SELECT etu.id FROM etudiant
-        WHERE nom="' . $student_name . '"
-        AND prenom="' . $student_surname . '"'
-		);
-		$row = $query->fetch();
-		if ($row) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public function addStudent($student_name, $student_surname, $program, $nb_semester) {
 		$db = Database::getInstance();
 		$query = $db->query(' SELECT id FROM liste_programme
@@ -49,16 +35,6 @@ class EducationServiceModel {
 		}
 
 		return $this->getData();
-	}
-
-	public function getFormation() {
-		$db = Database::getInstance();
-		$query = $db->query(' SELECT libelle FROM liste_programme
-        WHERE libelle <> "TC" '
-		);
-		$row = $query->fetchAll();
-
-		return $row;
 	}
 
 	public function purgeStudentList() {
@@ -99,25 +75,6 @@ class EducationServiceModel {
 		} else {
 			return false;
 		}	
-	}
-
-	public function addStudent($student_name, $student_surname, $program, $nb_semester) {
-		$db = Database::getInstance();
-		$query = $db->query('	SELECT id FROM liste_programme
-								WHERE libelle="'.$program.'"'
-				);
-		$progam = $query->fetch();
-		if($program) {
-			$db->exec('INSERT INTO etudiant(id_programme, nom, prenom, semestre) VALUES (
-																						`'.$program->id.'`,
-																						`'.$student_name.'`,
-																						`'.$student_surname.'`,
-																						`'.$nb_semester.'`	
-																						)'
-			);
-		}
-
-		return $this->getData();
 	}
 
 	public function formationTransfert($student_name, $student_surname, $formation_transfert) {
@@ -181,14 +138,6 @@ class EducationServiceModel {
 		$row = $query->fetchAll();
 
 		return $row;
-	}
-
-	public function  purgeStudentList() {
-		$db = Database::getInstance();
-		$db->exec('DELETE FROM conseiller');
-		$db->exec('DELETE FROM etudiant');
-
-		return $this->getData();
 	}
 
 	public function assignNewStudent($student_name, $student_surname) {
