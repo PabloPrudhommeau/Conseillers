@@ -1,18 +1,18 @@
 {
-	"scol": {
+	"service_scolarite": {
 		"home": "/EducationService/",
 		"features": {
 			"Attribution d'étudiant": "/EducationService/AssignNewStudent/",
 			"Attribution de tous les étudiants orhpelins": "/EducationService/AssignNewStudents/"
 		}
 	},
-	"drh": {
+	"directeur_ressources_humaine": {
 		"home": "/HumanRessourcesDirector/",
 		"features": {
 			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageResearcher/"
 		}
 	},
-	"resp": {
+	"responsable_programme": {
 		"home": "/ProgramManager/",
 		"features": {
 			"Gestion des habilitations": "/ProgramManager/ManageHabilitation/"
