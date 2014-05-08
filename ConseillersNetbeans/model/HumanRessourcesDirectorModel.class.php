@@ -69,10 +69,10 @@ class HumanRessourcesDirectorModel {
 		return $this->getData();
 	}
 
-	public function getPole() {
+	public function getArea() {
 		$db = Database::getInstance();
 		$query = $db->query('SELECT libelle FROM liste_pole');
-		$row = $query->fetchAll();
+		$row = $query->fetchAll(PDO::FETCH_COLUMN);
 
 		return $row;
 	}

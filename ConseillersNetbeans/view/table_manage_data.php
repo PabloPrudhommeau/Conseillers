@@ -15,23 +15,7 @@
 			?>
 			<td>
 				<?php
-				if(is_array($data_row)) {
-					?>
-					<select>
-					<?php
-					foreach ($data_row as $value) {
-						?>
-							<option><?php echo $value->libelle; ?></option>
-						<?php
-					}
-					?>
-					</select>
-					<?php
-				} else {
-					?>
-					<input class="table-manage-data" size="auto" type="text" name="<?php echo $data_row; ?>" />
-					<?php
-				}
+				echo $data_row;
 				?>
 			</td>
 			<?php
