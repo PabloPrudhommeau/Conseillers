@@ -20,8 +20,8 @@ class InputComponent extends BaseComponent {
 		$this->class = $class;
 	}
 
-	public function setBlur($action) {
-		$this->blur = htmlspecialchars($action);
+	public function setEvent($event) {
+		$this->event = $event;
 	}
 
 	public function setValue($value) {

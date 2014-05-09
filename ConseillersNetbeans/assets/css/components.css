@@ -118,11 +118,8 @@ table.table-manage-data input, select {
 	width: 95px;
 	padding:0;
 }
-input.valide {
-	background-color: #E9FFDA;
-}
-input.invalide {
-	background-color: #FF5050;
+.widget-button-default.delete-button {
+	display: none;
 }
 
 #table-hidden-row {

@@ -30,10 +30,8 @@ class HumanRessourcesDirectorController extends BaseController {
 	public function buildAcademicResearcherTable($data) {
 		$this->registry->template->page_first_title = 'Gestion des enseignants chercheurs';
 
-		$json_ajax_data = json_encode(	array('surname' => '\'+$(\'#academic-rechearcher-surname\').val()+\'', 
-											'name' => '\'+$(\'#academic-rechearcher-name\').val()+\'',
-											'office' => '\'+$(\'#office-researcher\').val()+\'',
-											'area' => '\'+$(\'#area-researcher\').val()+\''
+		$json_ajax_add_data = json_encode(	array('surname' => '\'+$(\'#academic-rechearcher-surname\').val()+\'', 
+											'name' => '\'+$(\'#academic-rechearcher-name\').val()+\''
 										));
 
 		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
@@ -41,38 +39,59 @@ class HumanRessourcesDirectorController extends BaseController {
 
 		$content .= '<br/>';
 
+		$button_delete = $this->registry->newComponent('ButtonWidget');
+		$button_delete->setImage('croix.png');
+		$button_delete->setClass('delete-button');
+
+		foreach($data as &$val) {
+			$json_ajax_delete_data = json_encode(array('name' => $val->nom, 'surname' => $val->prenom));
+			$button_delete->setAction('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/DeleteAcademicResearcherAjax/\',\'' . 
+																		$json_ajax_delete_data . '\',\'.table-manage-data\');');
+			$val->del_button = $button_delete->createView();
+		}
+
+		$ajax_content = $this->registry->newComponent('DivWidget');
+		$ajax_content->setClass('ajax-return');
+
+		$ajax_function = htmlspecialchars('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/ControlAvailability/\',\'' . $json_ajax_add_data . '\',\'.ajax-return\');');
+
 		$input_name = $this->registry->newComponent('Input');
-		$input_name->setClass('table-manage-data valide');
 		$input_name->setId('academic-rechearcher-name');
-		$input_name->setBlur('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/ControlAvailability/\',\'' . $json_ajax_data . '\',\'#table-hidden-row\');');
+		$input_name->setEvent('onBlur="'.$ajax_function.'"');
 
 		$input_surname = $this->registry->newComponent('Input');
-		$input_surname->setClass('table-manage-data valide');
 		$input_surname->setId('academic-rechearcher-surname');
-		$input_surname->setBlur('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/ControlAvailability/\',\'' . $json_ajax_data . '\',\'#table-hidden-row\');');
+		$input_surname->setEvent('onBlur="'.$ajax_function.'"');
 
 		$input_office = $this->registry->newComponent('Input');
-		$input_office->setClass('table-manage-data');
 		$input_office->setId('office-researcher');
 
 		$select_area = $this->registry->newComponent('Select');
 		$select_area->setOption($humanRessourcesDirector->getArea());
 		$select_area->setId('area-researcher');
 
+		$button_add = $this->registry->newComponent('ButtonWidget');
+		$button_add->setImage('plus_grey.gif');
+
+		$button_cancel = $this->registry->newComponent('ButtonWidget');
+		$button_cancel->setImage('croix.png');
+		$button_cancel->setAction('showHideElement(\'#table-hidden-row\')');
+
+		$ajax_content->setContent($button_add->createView());
+
 		$table = $this->registry->newComponent('Table');
 		$table->setDataHeader(array('Prenom', 'Nom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
-		$table->setHiddenRow(array(	$input_surname->createView(), 
-									$input_name->createView(), 
+		$table->setHiddenRow(array(	$input_surname->createView(),
+									$input_name->createView(),
 									$input_office->createView(), 
-									$select_area->createView()
+									$select_area->createView(),
+									$ajax_content->createView(),
+									$button_cancel->createView()
 							));
+		$table->setRowClass('deletable-row');
 
-		$ajax_content = $this->registry->newComponent('DivWidget');
-		$ajax_content->setClass('ajax-return');
-		$ajax_content->setContent($table->createView('table_manage_data'));
-
-		$content .= $ajax_content->createView();
+		$content .= $table->createView('table_manage_data');
 
 		return $content;
 	}
@@ -84,76 +103,34 @@ class HumanRessourcesDirectorController extends BaseController {
 		if($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
-			if(isset($data['name']) && isset($data['surname']) && isset($data['office']) && isset($data['area'])) {
+			if(isset($data['name']) && isset($data['surname'])) {
 				if($data['name'] != '' && $data['surname'] != '') {
-					$json_ajax_data = json_encode(	array('surname' => '\'+$(\'#academic-rechearcher-surname\').val()+\'', 
-											'name' => '\'+$(\'#academic-rechearcher-name\').val()+\'',
-											'office' => '\'+$(\'#office-researcher\').val()+\'',
-											'area' => '\'+$(\'#area-researcher\').val()+\''
+					$json_ajax_data = json_encode(	array(	'surname' => '\'+$(\'#academic-rechearcher-surname\').val()+\'', 
+															'name' => '\'+$(\'#academic-rechearcher-name\').val()+\'',
+															'office' => '\'+$(\'#office-researcher\').val()+\'',
+															'area' => '\'+$(\'#area-researcher\').val()+\''
 										));
-
 					$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
-					$input_name = $this->registry->newComponent('Input');
-					$input_name->setId('academic-rechearcher-name');
-					$input_name->setBlur('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/ControlAvailability/\',\'' . $json_ajax_data . '\',\'#table-hidden-row\');');
-					$input_name->setValue($data['name']);
 
-					$input_surname = $this->registry->newComponent('Input');
-					$input_surname->setId('academic-rechearcher-surname');
-					$input_surname->setBlur('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/ControlAvailability/\',\'' . $json_ajax_data . '\',\'#table-hidden-row\');');
-					$input_surname->setValue($data['surname']);
+					$ajax_content = $this->registry->newComponent('DivWidget');
+					$ajax_content->setClass('ajax-return');
+					
+					if(!$humanRessourcesDirector->alreadyExists($data['name'], $data['surname'])) {
+						$button_add = $this->registry->newComponent('ButtonWidget');
+						$button_add->setImage('plus.gif');
+						$button_add->setAction('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/addAcademicResearcherAjax/\',\'' . $json_ajax_data . '\',\'.table-manage-data\');');
 
-					$input_office = $this->registry->newComponent('Input');
-					$input_office->setClass('table-manage-data');
-					$input_office->setId('office-researcher');
-					$input_office->setValue($data['office']);
+						$ajax_content->setContent($button_add->createView());
 
-					$select_area = $this->registry->newComponent('Select');
-					$select_area->setOption($humanRessourcesDirector->getArea());
-					$select_area->setId('area-researcher');
-					$select_area->setValue($data['area']);
-
-					if($humanRessourcesDirector->alreadyExists($data['name'], $data['surname'])) {
-						$input_surname->setClass('table-manage-data invalide');
-						$input_name->setClass('table-manage-data invalide');
-
-						echo '<td>';
-						echo $input_surname->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $input_name->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $input_office->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $select_area->createView();
-						echo '</td>';
-
+						echo $ajax_content->createView();
 					} else {
-						$input_surname->setClass('table-manage-data valide');
-						$input_name->setClass('table-manage-data valide');
+						$button_add = $this->registry->newComponent('ButtonWidget');
+						$button_add->setImage('plus_grey.gif');
 
-						$button = $this->registry->newComponent('ButtonWidget');
-						$button->setImage('plus.gif');
-						$button->setAction('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/AddAcademicResearcherAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
+						$ajax_content->setContent($button_add->createView());
 
-						echo '<td>';
-						echo $input_surname->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $input_name->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $input_office->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $select_area->createView();
-						echo '</td>';
-						echo '<td>';
-						echo $button->createView();
-						echo '</td>';
-					}		
+						echo $ajax_content->createView();
+					}
 				}
 			}
 		}
@@ -166,6 +143,20 @@ class HumanRessourcesDirectorController extends BaseController {
 			if (isset($data['name']) && isset($data['surname']) && isset($data['office']) && isset($data['area'])) {
 				$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
 				$humanRessourcesDirector->addAcademicResearcher($data['name'], $data['surname'], $data['office'], $data['area']);
+				$data = $humanRessourcesDirector->getData();
+				echo $this->buildAcademicResearcherTable($data);
+			}
+		}
+	}
+
+	public function deleteAcademicResearcherAjax() {
+		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			$ajax = $this->registry->newComponent('Ajax');
+			$data = $ajax->interceptData();
+			if(isset($data['name']) && isset($data['surname'])) {
+				$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+				$humanRessourcesDirector->deleteAcademicResearcher($data['name'], $data['surname']);
+
 				$data = $humanRessourcesDirector->getData();
 				echo $this->buildAcademicResearcherTable($data);
 			}

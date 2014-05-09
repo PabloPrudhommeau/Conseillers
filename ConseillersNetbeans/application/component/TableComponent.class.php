@@ -27,6 +27,10 @@ class TableComponent extends BaseComponent {
 		$this->data_hidden_row_class = $class;
 	}
 
+	public function setRowClass($class) {
+		$this->class = $class;
+	}
+
 	public function getHeader() {
 		return $this->data_header;
 	}

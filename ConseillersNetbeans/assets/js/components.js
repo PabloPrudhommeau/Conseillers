@@ -39,3 +39,12 @@ $(document).ready(function() {
 		eval(action);
 	});
 });
+
+$(document).ready(function() {
+	$(document).on('mouseover', '.deletable-row', function() {
+		$(this).find('.delete-button').fadeIn(200);
+	});
+	$(document).on('mouseout', '.deletable-row', function() {
+		$(this).find('.delete-button').stop().fadeOut(200);
+	});
+});

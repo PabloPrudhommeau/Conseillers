@@ -26,18 +26,18 @@
 	<?php
 	foreach ($table_data as $key => $data_row) {
 		?>
-		<tr class="table-row" id="enseignant_<?php echo $key; ?>">
+		<tr class="table-row <?php echo $class; ?>" id="enseignant_<?php echo $key; ?>">
 			<?php
-			foreach ($data_row as $data_cell) {
+			foreach ($data_row as $key_cell => $data_cell) {
 				if (is_array($data_cell)) {
 					?>
 					<td>
 						<table>
 							<tr>
 								<?php
-								foreach ($data_cell as $value) {
+								foreach ($data_cell as $key => $value) {
 									?>
-									<td><?php echo $value; ?> </td>
+									<td class="<?php echo $key; ?>"><?php echo $value; ?> </td>
 									<?php
 								}
 								?>
@@ -47,7 +47,7 @@
 					<?php
 				} else {
 					?>
-					<td> <?php echo $data_cell; ?> </td>
+					<td class="<?php echo $key_cell; ?>"> <?php echo $data_cell; ?> </td>
 					<?php
 				}
 			}

@@ -19,6 +19,10 @@ class ButtonWidgetComponent extends BaseComponent {
 		$this->height = $height;
 	}
 
+	public function setClass($class) {
+		$this->class = $class;
+	}
+
 	public function createView($template = 'widget_button_default') {
 		return parent::createView($template);
 	}

@@ -99,10 +99,11 @@ class HumanRessourcesDirectorModel {
 		);
 		$id_academic_researcher = $query->fetch();
 
-		$db->exec('DELETE FROM conseiller WHERE id_enseignant_chercheur=' . $id_academic_researcher->id);
-		$db->exec('DELETE FROM enseignant_chercheur WHERE id=' . $id_academic_researcher->id);
+		$st = $db->prepare('DELETE FROM conseiller WHERE id_enseignant_chercheur=' . $id_academic_researcher->id);
+		$st->execute();
 
-		return $this->getData();
+		$st = $db->prepare('DELETE FROM enseignant_chercheur WHERE id=' . $id_academic_researcher->id);
+		$st->execute();
 	}
 
 }
