@@ -27,6 +27,105 @@ class HumanRessourcesDirectorController extends BaseController {
 		$this->registry->template->show();
 	}
 
+	public function addAcademicResearchers() {
+		$this->registry->template->page_first_title = 'Ajouter une liste d\'enseignants';
+
+		$form = $this->registry->newComponent('Form');
+		$form->init('post', '');
+		$form->addField('Fichier', 'fichier', array('type' => 'file', 'maxlength' => '20', 'id' => 'fichier-CSV'));
+
+		/*if ($form->isValid()) {
+			$auth = $this->registry->newModel('Registered');
+			$user = $form->getFieldValue('user');
+			$password = $form->getFieldValue('password');
+			$token = $auth->getToken($user, $password);
+			if ($token) {
+				$this->registry->Authentification->signin($user, $password, $token['statut']);
+				$this->registry->Authentification->goHome();
+			} else {
+				$form->addCommonError('Ce couple utilisateur/mot de passe n\'a pas permis de vous authentifier');
+			}
+		}*/
+
+		$ajax_content = $this->registry->newComponent('DivWidget');
+		$ajax_content->setClass('ajax-return');
+
+		$view .= $form->createView();
+		$view .= $ajax_content->createView();
+
+		$this->registry->template->content = $view;
+		$this->registry->template->show();
+	}
+
+	public function showCounsellor() {
+		$this->registry->template->page_first_title = 'Présentation des conseillés';
+		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+
+		$data = $humanRessourcesDirector->getCounsellor();
+
+		$table = $this->registry->newComponent('Table');
+		$table->setDataHeader(array('Nombre d\'étudiant', 'Nom', 'Bureau', 'Pole'));
+		$table->setDataRow($data);
+
+		$this->registry->template->content = $table->createView();
+
+		$this->registry->template->show();
+	}
+
+	public function showCounsellorWithStudent() {
+		$this->registry->template->page_first_title = 'Présentation des conseillés avec leurs étudiants';
+		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+
+		$data = $humanRessourcesDirector->getCounsellorWithStudent();
+
+		$content = '';
+
+		foreach ($data as $key => $value) {
+			$table = $this->registry->newComponent('Table');
+			$table->setCaption($key);
+			$table->setDataHeader(array('Prénom', 'Nom', 'Formation'));
+			$table->setDataRow($value);
+			$content .= $table->createView();
+		}
+
+		$this->registry->template->content = $content;
+
+		$this->registry->template->show();
+	}
+
+	public function showDescNumberCounsellor() {
+		$this->registry->template->page_first_title = 'Présentation des enseignants nombre d\'étudiant décroissant';
+		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+
+		$data = $humanRessourcesDirector->getDataDesc();
+
+		$table = $this->registry->newComponent('Table');
+		$table->setDataHeader(array('Nombre d\'étudiant', 'Nom', 'Bureau', 'Pole'));
+		$table->setDataRow($data);
+
+		$this->registry->template->content = $table->createView();
+
+		$this->registry->template->show();
+	}
+
+	public function purgeAcademicResearcher() {
+		$this->registry->template->page_first_title = 'Effacer tous les enseignants';
+
+		$view = 'Êtes vous sûr de supprimer tous les enseignants de la base de données impliquant le retrait de tous les conseillés ?<br/>';
+		$button = $this->registry->newComponent('ButtonWidget');
+		$button->setAction('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/PurgeAcademicResearcherAjax/\',\'\',\'.ajax-return\');');
+		$button->setLabel('Oui, je souhaite effacer tous les enseignants de la base de données');
+		$view .= $button->createView('widget_button_classic');
+
+		$ajax_content = $this->registry->newComponent('DivWidget');
+		$ajax_content->setClass('ajax-return');
+
+		$view .= $ajax_content->createView();
+
+		$this->registry->template->content = $view;
+		$this->registry->template->show();
+	}
+
 	public function buildAcademicResearcherTable($data) {
 		$this->registry->template->page_first_title = 'Gestion des enseignants chercheurs';
 
@@ -98,6 +197,14 @@ class HumanRessourcesDirectorController extends BaseController {
 
 	/* Méthodes appellées via ajax */
 	/*	 * **************************** */
+
+	public function purgeAcademicResearcherAjax() {
+		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+			$data = $humanRessourcesDirector->purgeAcademicResearcher();
+			echo '<br />Tous les enseignants ont été effacés';
+		}
+	}
 
 	public function controlAvailability() {
 		if($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {

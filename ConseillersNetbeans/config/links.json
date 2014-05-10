@@ -9,7 +9,12 @@
 	"directeur_ressources_humaine": {
 		"home": "/HumanRessourcesDirector/",
 		"features": {
-			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageAcademicResearcher/"
+			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageAcademicResearcher/",
+			"Affichages des conseillés": "/HumanRessourcesDirector/ShowCounsellor/",
+			"Affichage des conseillés (nb étudiant décroissant)": "/HumanRessourcesDirector/ShowDescNumberCounsellor/",
+			"Affichage des conseillés avec leurs étudiants": "/HumanRessourcesDirector/ShowCounsellorWithStudent/",
+			"Supprimer tous les enseignants": "/HumanRessourcesDirector/PurgeAcademicResearcher/",
+			"Ajouter des enseignants par CSV": "/HumanRessourcesDirector/AddAcademicResearchers/"
 		}
 	},
 	"responsable_programme": {
