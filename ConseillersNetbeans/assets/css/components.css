@@ -1,4 +1,6 @@
-/* Menu principal */
+/* -------------------- */
+/*    Menu principal    */
+/* -------------------- */
 ul.widget-menu-main {
 	float:right;
 }
@@ -17,8 +19,12 @@ ul.widget-menu-main li a {
 	padding:8px 30px; 
 	text-transform:uppercase;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/
 
+
+/* -------------------- */
 /* Composant formulaire */
+/* -------------------- */
 .form{
 	width:50%;	
 }
@@ -37,8 +43,12 @@ ul.widget-menu-main li a {
 	border:1px solid #ffadad;
 	background:#ffebeb;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/
 
+
+/* ------------------- */
 /* Menu fonctionnalité */
+/* ------------------- */
 ul.widget-menu-feature {
 	position:absolute;
 	list-style: none;
@@ -59,7 +69,6 @@ ul.widget-menu-feature li a{
 	display:block;
 	color:#ccc;
 }
-
 ul.widget-menu-feature-list {
 	list-style: none;
 	position: absolute; 
@@ -68,7 +77,6 @@ ul.widget-menu-feature-list {
 	white-space:nowrap;
 	opacity:0.9;
 	background: #ddd;
-
 }
 ul.widget-menu-feature-list li{
 	font-size:12px;
@@ -81,72 +89,125 @@ ul.widget-menu-feature-list li a{
 	padding:8px 9px;
 	height:auto;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/
 
-/* Composant Table */
+
+/* ----------------------- */
+/* Composant table général */
+/* ----------------------- */
+table.table-component td{
+	width:122px;
+}
+table.table-component input, select {
+	width: 116px;
+	padding:4px 2px;
+	margin:0;
+}
+table.table-component td, th {
+	padding:5px 15px;
+	text-align:center;
+}
+table.table-component th {
+	text-transform:uppercase;
+}
+table.table-component td {
+	border-right:1px dotted #ccc; 
+}
+table.table-component td:nth-last-child(1){
+	border-right:none;
+}
+table.table-component td img {
+	vertical-align:middle;
+	margin-top:-3px;
+}
+/*°°°°°°°°°°°°°°°°°°°°°°*/
+
+
+/* ----------------------- */
+/* Composant table default */
+/* ----------------------- */
 table.table-default tr:nth-child(even) {
 	background: #dcf1ce;
 }
 table.table-default tr:nth-child(odd) {
 	background: #fff;
 }
-table.table-default td, th {
-	padding:5px 15px;
-	text-align:left;
-}
+
 table.table-default img {
 	vertical-align:middle;
 	margin-left:5px;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/
+
+
+/* ----------------------- */
+/* Composant table manage  */
+/* ----------------------- */
 table.table-manage-data tr:nth-child(odd) {
 	background: #dcf1ce;
 }
 table.table-manage-data tr:nth-child(even) {
 	background: #fff;
 }
-table.table-manage-data td, th {
-	padding:5px 15px;
-	text-align:left;
-}
 table.table-manage-data th {
-	background:white;
+	background: #fff;
 }
-table.table-manage-data img {
-	vertical-align:middle;
-	margin-left:5px;
+table.table-manage-data tr td:nth-last-child(1), table.table-manage-data .hidden-row td:nth-last-child(2){
+	width:20px;
+	border-right:none;
+	padding:5px 15px;
 }
-table.table-manage-data input, select {
-	width: 95px;
-	padding:0;
-}
-.widget-button-default.delete-button {
-	display: none;
-}
-
-#table-hidden-row {
+table.table-manage-data #table-hidden-row, table.table-manage-data .widget-button-default.delete-button {
 	display:none;
 }
+table.table-manage-data #table-hidden-row td {
+	padding-top : 20px;
+	padding-bottom : 20px;
+}
+/*°°°°°°°°°°°°°°°°°°°°°°*/
 
-/* Widget Button Default */
+
+/* ----------------------- */
+/* Widget Button Default   */
+/* ----------------------- */
 .widget-button-default {
 	cursor:pointer;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/
 
-/* Widget Button Advanced */
+
+/* ----------------------- */
+/* Widget Button Advanced  */
+/* ----------------------- */
 .widget-button-advanced {
 	cursor:pointer;
+	background:#d0dbc5;
+	border-radius:5px;
+	margin:15px;
 }
 .widget-button-advanced td, .widget-button-advanced img{
 	vertical-align:middle;
-	padding:0 3px 0 0;
+	padding:3px;
+}
+.widget-button-advanced td:nth-last-child(1){
+	padding-right:8px;
 }
 .widget-button-advanced img{
 	margin-top:-1px;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/
 
-/* Widget Button Classic */
+
+/* ----------------------- */
+/* Widget Button Classic   */
+/* ----------------------- */
 button.widget-button-classic {
-	background: #dcf1ce;
-	padding:5px;
+	background: #d0dbc5;
+	padding:8px;
+	border:1px solid #999;
+	border-radius:5px;
 	cursor:pointer;
+	margin:15px;
 	font-family:inherit;
 }
+/*°°°°°°°°°°°°°°°°°°°°°°*/

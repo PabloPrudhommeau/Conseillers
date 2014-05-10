@@ -41,11 +41,11 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	$(document).on('mouseover', '.deletable-row', function() {
-		$(this).find('.delete-button').fadeIn(200);
+	$(document).on('mouseenter', '.deletable-row', function() {
+		$(this).find('.delete-button').fadeIn(100);
 	});
-	$(document).on('mouseout', '.deletable-row', function() {
-		$(this).find('.delete-button').stop().fadeOut(200);
+	$(document).on('mouseleave', '.deletable-row', function() {
+		$(this).find('.delete-button').stop().fadeOut(100);
 	});
 });
 

@@ -1,4 +1,4 @@
-<table class="table-manage-data">
+<table class="table-component table-manage-data">
 	<caption><?php echo $caption; ?></caption>
 	<tr>
 		<?php
@@ -9,9 +9,9 @@
 		}
 		?>
 	</tr>
-	<tr class="<?php echo $hidden_row_class; ?>" id="table-hidden-row">
+	<tr class="table-row <?php echo $hidden_row_class; ?>" id="table-hidden-row">
 		<?php
-		foreach($table_hidden_data as $data_row) {
+		foreach ($table_hidden_data as $data_row) {
 			?>
 			<td>
 				<?php

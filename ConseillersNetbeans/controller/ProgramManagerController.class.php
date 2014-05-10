@@ -20,7 +20,6 @@ class ProgramManagerController extends BaseController {
 		$data = $program_manager->getData();
 
 		$table = $this->registry->newComponent('Table');
-		$table->setCaption('Titre du tableau');
 		$table->setDataHeader(array('Prenom','Nom','Bureau', 'Habilitations'));
 		$table->setDataRow($data);
 
