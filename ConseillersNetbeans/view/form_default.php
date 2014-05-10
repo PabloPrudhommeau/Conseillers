@@ -1,4 +1,4 @@
-<form method="<?php echo $method; ?>" action="<?php echo $action; ?>">
+<form method="<?php echo $method; ?>" action="<?php echo $action; ?>" <?php echo $data_form; ?>>
 	<table class="form">
 		<?php
 		foreach ($fields as $key => $val) {

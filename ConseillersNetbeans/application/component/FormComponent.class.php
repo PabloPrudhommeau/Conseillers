@@ -7,9 +7,10 @@ class FormComponent extends BaseComponent {
 	private $syntax_errors = array();
 	private $common_errors = array();
 	
-	public function init($method, $action) {
+	public function init($method, $action, $data = '') {
 		$this->method = $method;
 		$this->action = $action;
+		$this->data_form = $data;
 		return $this;
 	}
 
@@ -36,9 +37,17 @@ class FormComponent extends BaseComponent {
 	public function addCommonError($error){
 		$this->common_errors[] = $error;
 	}
+
+	public function setFile($file) {
+		$this->file = $file;
+	}
+
+	public function getFile() {
+		return $this->file;
+	}
 	
 	public function isValid() {
-		if (!empty($_POST)) {
+		if (!empty($_POST) || !empty($_FILES)) {
 			foreach ($_POST as $key => $val) {
 				$this->request[$key] = $val;
 			}
@@ -63,6 +72,13 @@ class FormComponent extends BaseComponent {
 								if (!$condition) {
 									$this->addSyntaxError($field['label'], 'Le champ ne doit pas être vide');
 								}
+								break;
+							case 'file_added':
+								if($_FILES['file']['error'] == 4) {
+									$this->addSyntaxError($field['label'], 'Aucun fichier n\'a été ajouté');
+								} else {
+									$this->setFile($_FILES);
+								}								
 								break;
 							default:
 								break;

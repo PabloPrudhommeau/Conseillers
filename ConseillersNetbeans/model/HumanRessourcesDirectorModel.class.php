@@ -69,9 +69,10 @@ class HumanRessourcesDirectorModel {
 
 	public function alreadyExists($name, $surname) {
 		$db = Database::getInstance();
+
 		$query = $db->query('	SELECT id FROM enseignant_chercheur
-								WHERE nom="' . $name . '"
-								AND prenom="' . $surname . '"'
+								WHERE nom="' . self::stdName($name) . '"
+								AND prenom="' . self::stdSurname($surname) . '"'
 		);
 		$row = $query->fetch();
 		if ($row) {
@@ -83,14 +84,12 @@ class HumanRessourcesDirectorModel {
 
 	public function addAcademicResearcher($name, $surname, $office, $research_group) {
 		$db = Database::getInstance();
-		$query = $db->query('SELECT id FROM liste_pole WHERE libelle="' . $research_group . '"');
-		$id_research_group = $query->fetch();
 
 		$st = $db->prepare('INSERT INTO enseignant_chercheur(nom, prenom, bureau, id_pole) VALUES (																	
-																						\'' . $name . '\',
-																						\'' . $surname . '\',
+																						\'' . self::stdName($name) . '\',
+																						\'' . self::stdSurname($surname) . '\',
 																						\'' . $office . '\',
-																						\'' . $id_research_group->id . '\')'
+																						\'' . self::getWorkGroupId($research_group) . '\')'
 				);
 		$st->execute();
 	}
@@ -103,11 +102,38 @@ class HumanRessourcesDirectorModel {
 		return $row;
 	}
 
-	public function addAcademicResearchers($file) {
-		/*
-		 * Ajout d'enseignants pas injection CSV
-		 * Définir si le fichier est lu ici ou avant
-		 */
+	public function addAcademicResearchers($data) {
+		$db = Database::getInstance();
+		$data_affected = array();
+
+		foreach($data as $key => $value) {	
+			$name = self::stdName($value['nom']);
+			$surname = self::stdSurname($value['prenom']);
+			$id_work_group = self::getWorkGroupId($value['pole']);
+
+			$st = $db->prepare('INSERT INTO enseignant_chercheur(id_pole, nom, prenom, bureau)
+								SELECT * FROM (SELECT 	' . $id_work_group . ',
+														\'' . $name . '\',
+														\'' . $surname . '\',
+														\'' . $value['bureau'] . '\') AS tmp
+								WHERE NOT EXISTS (
+								    SELECT nom, prenom FROM enseignant_chercheur 
+								    WHERE nom=\'' . $name . '\' 
+								    AND prenom=\'' . $surname . '\'
+								) LIMIT 1'
+					);
+			$st->execute();
+			$affected = $st->rowCount();
+
+			if($affected == 1) {
+				$data_affected[$key] = array('nom' => $name,
+									'prenom' => $surname);
+			}
+			
+		}
+
+		return $data_affected;
+
 	}
 
 	public function purgeAcademicResearcher() {
@@ -139,6 +165,28 @@ class HumanRessourcesDirectorModel {
 
 		$st = $db->prepare('DELETE FROM enseignant_chercheur WHERE id=' . $id_academic_researcher->id);
 		$st->execute();
+	}
+
+	function getWorkGroupId($label) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT id FROM liste_pole
+								WHERE libelle=\'' . $label . '\''
+				);
+		$row = $query->fetch();
+
+		if($row) {
+			return $row->id;
+		} else {
+			return NULL;
+		}
+	}
+
+	function stdName($name) {
+		return strtoupper($name);
+	}
+
+	function stdSurname($surname) {
+		return strtoupper(substr($surname, 0, 1)).strtolower(substr($surname, 1));
 	}
 
 }

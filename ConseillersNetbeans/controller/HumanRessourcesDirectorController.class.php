@@ -31,29 +31,71 @@ class HumanRessourcesDirectorController extends BaseController {
 		$this->registry->template->page_first_title = 'Ajouter une liste d\'enseignants';
 
 		$form = $this->registry->newComponent('Form');
-		$form->init('post', '');
-		$form->addField('Fichier', 'fichier', array('type' => 'file', 'maxlength' => '20', 'id' => 'fichier-CSV'));
+		$form->init('post', '', 'enctype="multipart/form-data"');
+		$form->addField('Fichier', 'file', array('type' => 'file', 'maxlength' => '20', 'id' => 'fichier-CSV'))
+				->addFieldRule('file', array('rule_type' => 'operator', 'rule_value' => 'file_added', 'rule_bool' => false));
 
-		/*if ($form->isValid()) {
-			$auth = $this->registry->newModel('Registered');
-			$user = $form->getFieldValue('user');
-			$password = $form->getFieldValue('password');
-			$token = $auth->getToken($user, $password);
-			if ($token) {
-				$this->registry->Authentification->signin($user, $password, $token['statut']);
-				$this->registry->Authentification->goHome();
+		if($form->isValid()) {
+			$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+			$file = $form->getFile();
+
+			$csv_header = array('prenom', 'nom', 'bureau', 'pole');
+
+			if(!file_exists($file['file']['tmp_name']) || !is_readable($file['file']['tmp_name'])) {
+				$form->addCommonError('Un problème a été rencontré à la lecture du fichier');
 			} else {
-				$form->addCommonError('Ce couple utilisateur/mot de passe n\'a pas permis de vous authentifier');
+				$header = NULL;
+				$data = array();
+				$error = false;
+				if(($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
+					while(($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
+						if(!$header) {
+							if($row == $csv_header) {
+								$header = $row;
+							} else {
+								$form->addCommonError('Ce fichier ne correspond pas au format attendu');
+								$error = true;
+								break;
+							}
+						} else {
+							if(count($header) != count($row)) {
+								$form->addCommonError('Une erreur a été rencontré pendant la lectures des données, vérifiez leur formalisme et recommencez');
+								$error = true;
+							} else {
+								$data[] = array_combine($header, $row);
+							}
+						}
+					}
+					fclose($handle);
+				}
+
+				if(!$error) {
+					$affected_data = $humanRessourcesDirector->addAcademicResearchers($data);
+					$content .= '<br/>';
+
+					switch(count($affected_data)) {
+						case 0:
+							$content .= 'Aucun enseignant n\'a été ajouté';
+							break;
+						case 1:
+							$content .= 'Un enseignant ajouté :';
+							break;
+						default:
+							$content .= count($affected_data) . ' enseignants ont été ajouté :';
+							break;
+					}
+
+					$content .= '<br/>';
+
+					foreach ($affected_data as $val) {
+						$content .= '* Ajout de l\'enseignant <b>' . $val['prenom'] . ' ' . $val['nom'] . '</b><br/>';
+					}
+
+				}
 			}
-		}*/
+		}
 
-		$ajax_content = $this->registry->newComponent('DivWidget');
-		$ajax_content->setClass('ajax-return');
-
-		$view .= $form->createView();
-		$view .= $ajax_content->createView();
-
-		$this->registry->template->content = $view;
+		$this->registry->template->content = $form->createView().$content;
 		$this->registry->template->show();
 	}
 
@@ -68,7 +110,6 @@ class HumanRessourcesDirectorController extends BaseController {
 		$table->setDataRow($data);
 
 		$this->registry->template->content = $table->createView();
-
 		$this->registry->template->show();
 	}
 
@@ -100,7 +141,7 @@ class HumanRessourcesDirectorController extends BaseController {
 		$data = $humanRessourcesDirector->getDataDesc();
 
 		$table = $this->registry->newComponent('Table');
-		$table->setDataHeader(array('Nombre d\'étudiant', 'Nom', 'Bureau', 'Pole'));
+		$table->setDataHeader(array('Nombre d\'étudiant', 'Nom', 'Prenom', 'Bureau', 'Pole'));
 		$table->setDataRow($data);
 
 		$this->registry->template->content = $table->createView();
