@@ -1,4 +1,4 @@
-<table class="table-default">
+<table class="table-component table-default">
 	<caption><?php echo $caption; ?></caption>
 	<tr>
 		<?php
