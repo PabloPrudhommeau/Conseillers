@@ -1,4 +1,4 @@
-<select name="<?php echo $name; ?>" class="<?php echo $class; ?>" id="<?php echo $id; ?>">
+<select name="<?php echo $name; ?>" class="<?php echo $class; ?>" id="<?php echo $id; ?>" <?php echo $event; ?>>
 	<?php
 	foreach($option as $val) {
 		if($value == $val) {

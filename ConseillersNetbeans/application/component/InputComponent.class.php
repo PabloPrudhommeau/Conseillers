@@ -24,6 +24,10 @@ class InputComponent extends BaseComponent {
 		$this->event = $event;
 	}
 
+	public function setPlaceHolder($value) {
+		$this->placeHolder = $value;
+	}
+
 	public function setValue($value) {
 		$this->value = $value;
 	}

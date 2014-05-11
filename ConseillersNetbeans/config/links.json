@@ -2,17 +2,22 @@
 	"service_scolarite": {
 		"home": "/EducationService/",
 		"features": {
-			"Attribution d'étudiant": "/EducationService/AssignNewStudent/",
-			"Attribution de tous les étudiants orhpelins": "/EducationService/AssignNewStudents/"
+			"Gérer les étudiants": "/EducationService/ManageStudent/",
+			"Afficher les étudiants orphelins": "/EducationService/ShowOrphans/",
+			"Afficher les conseillés (nb étudiant décroissant)": "/HumanRessourcesDirector/ShowDescNumberCounsellor/",
+			"Afficher les étudiants selon le programme": "/EducationService/ShowStudentByProgram/",
+			"Attribuer tous les étudiants orhpelins": "/EducationService/AssignNewStudents/",
+			"Supprimer tous les étudiants": "/EducationService/PurgeStudent/",
+			"Ajouter des étudiants par CSV": "/EducationService/AddStudents/"
 		}
 	},
 	"directeur_ressources_humaine": {
 		"home": "/HumanRessourcesDirector/",
 		"features": {
-			"Gestion des enseignants chercheurs": "/HumanRessourcesDirector/ManageAcademicResearcher/",
-			"Affichages des conseillés": "/HumanRessourcesDirector/ShowCounsellor/",
-			"Affichage des conseillés (nb étudiant décroissant)": "/HumanRessourcesDirector/ShowDescNumberCounsellor/",
-			"Affichage des conseillés avec leurs étudiants": "/HumanRessourcesDirector/ShowCounsellorWithStudent/",
+			"Gérer les enseignants chercheurs": "/HumanRessourcesDirector/ManageAcademicResearcher/",
+			"Afficher les conseillés": "/HumanRessourcesDirector/ShowCounsellor/",
+			"Afficher les conseillés (nb étudiant décroissant)": "/HumanRessourcesDirector/ShowDescNumberCounsellor/",
+			"Afficher les conseillés avec leurs étudiants": "/HumanRessourcesDirector/ShowCounsellorWithStudent/",
 			"Supprimer tous les enseignants": "/HumanRessourcesDirector/PurgeAcademicResearcher/",
 			"Ajouter des enseignants par CSV": "/HumanRessourcesDirector/AddAcademicResearchers/"
 		}

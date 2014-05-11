@@ -14,7 +14,7 @@ class HumanRessourcesDirectorController extends BaseController {
 
 	public function manageAcademicResearcher() {
 		$this->registry->template->page_first_title = 'Gestion des enseignants chercheurs';
-		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 
 		$button = $this->registry->newComponent('ButtonWidget');
 		$button->setImage('add.png');
@@ -22,7 +22,7 @@ class HumanRessourcesDirectorController extends BaseController {
 		$button->setLabel('Ajouter enseignant');
 		$content .= $button->createView('widget_button_advanced');
 
-		$data = $humanRessourcesDirector->getData();
+		$data = $human_ressources_director->getData();
 		$this->registry->template->content = $content . $this->buildAcademicResearcherTable($data);
 		$this->registry->template->show();
 	}
@@ -36,7 +36,7 @@ class HumanRessourcesDirectorController extends BaseController {
 				->addFieldRule('file', array('rule_type' => 'operator', 'rule_value' => 'file_added', 'rule_bool' => false));
 
 		if($form->isValid()) {
-			$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+			$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 			$file = $form->getFile();
 
 			$csv_header = array('prenom', 'nom', 'bureau', 'pole');
@@ -70,7 +70,7 @@ class HumanRessourcesDirectorController extends BaseController {
 				}
 
 				if(!$error) {
-					$affected_data = $humanRessourcesDirector->addAcademicResearchers($data);
+					$affected_data = $human_ressources_director->addAcademicResearchers($data);
 					$content .= '<br/>';
 
 					switch(count($affected_data)) {
@@ -78,7 +78,7 @@ class HumanRessourcesDirectorController extends BaseController {
 							$content .= 'Aucun enseignant n\'a été ajouté';
 							break;
 						case 1:
-							$content .= 'Un enseignant ajouté :';
+							$content .= 'Un enseignant a été ajouté :';
 							break;
 						default:
 							$content .= count($affected_data) . ' enseignants ont été ajouté :';
@@ -101,9 +101,9 @@ class HumanRessourcesDirectorController extends BaseController {
 
 	public function showCounsellor() {
 		$this->registry->template->page_first_title = 'Présentation des conseillés';
-		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 
-		$data = $humanRessourcesDirector->getCounsellor();
+		$data = $human_ressources_director->getCounsellor();
 
 		$table = $this->registry->newComponent('Table');
 		$table->setDataHeader(array('Nombre d\'étudiant', 'Nom', 'Bureau', 'Pole'));
@@ -115,9 +115,9 @@ class HumanRessourcesDirectorController extends BaseController {
 
 	public function showCounsellorWithStudent() {
 		$this->registry->template->page_first_title = 'Présentation des conseillés avec leurs étudiants';
-		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 
-		$data = $humanRessourcesDirector->getCounsellorWithStudent();
+		$data = $human_ressources_director->getCounsellorWithStudent();
 
 		$content = '';
 
@@ -136,9 +136,9 @@ class HumanRessourcesDirectorController extends BaseController {
 
 	public function showDescNumberCounsellor() {
 		$this->registry->template->page_first_title = 'Présentation des enseignants nombre d\'étudiant décroissant';
-		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 
-		$data = $humanRessourcesDirector->getDataDesc();
+		$data = $human_ressources_director->getDataDesc();
 
 		$table = $this->registry->newComponent('Table');
 		$table->setDataHeader(array('Nombre d\'étudiant', 'Nom', 'Prenom', 'Bureau', 'Pole'));
@@ -174,8 +174,8 @@ class HumanRessourcesDirectorController extends BaseController {
 			'name' => '\'+$(\'#academic-rechearcher-name\').val()+\''
 		));
 
-		$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
-		$data = $humanRessourcesDirector->getData();
+		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
+		$data = $human_ressources_director->getData();
 		$button_delete = $this->registry->newComponent('ButtonWidget');
 		$button_delete->setImage('croix.png');
 		$button_delete->setClass('delete-button');
@@ -204,7 +204,7 @@ class HumanRessourcesDirectorController extends BaseController {
 		$input_office->setId('office-researcher');
 
 		$select_area = $this->registry->newComponent('Select');
-		$select_area->setOption($humanRessourcesDirector->getArea());
+		$select_area->setOption($human_ressources_director->getArea());
 		$select_area->setId('area-researcher');
 
 		$button_add = $this->registry->newComponent('ButtonWidget');
@@ -238,8 +238,8 @@ class HumanRessourcesDirectorController extends BaseController {
 
 	public function purgeAcademicResearcherAjax() {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
-			$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
-			$data = $humanRessourcesDirector->purgeAcademicResearcher();
+			$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
+			$data = $human_ressources_director->purgeAcademicResearcher();
 			echo '<br />Tous les enseignants ont été effacés';
 		}
 	}
@@ -255,11 +255,11 @@ class HumanRessourcesDirectorController extends BaseController {
 						'office' => '\'+$(\'#office-researcher\').val()+\'',
 						'area' => '\'+$(\'#area-researcher\').val()+\''
 					));
-					$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
+					$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 
 					$ajax_content = $this->registry->newComponent('DivWidget');
 					$ajax_content->setClass('ajax-return');
-					if (!$humanRessourcesDirector->alreadyExists($data['name'], $data['surname'])) {
+					if (!$human_ressources_director->alreadyExists($data['name'], $data['surname'])) {
 						$button_add = $this->registry->newComponent('ButtonWidget');
 						$button_add->setImage('plus.gif');
 						$button_add->setAction('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/addAcademicResearcherAjax/\',\'' . $json_ajax_data . '\',\'.table-manage-data\');');
@@ -285,9 +285,9 @@ class HumanRessourcesDirectorController extends BaseController {
 			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
 			if (isset($data['name']) && isset($data['surname']) && isset($data['office']) && isset($data['area'])) {
-				$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
-				$humanRessourcesDirector->addAcademicResearcher($data['name'], $data['surname'], $data['office'], $data['area']);
-				$data = $humanRessourcesDirector->getData();
+				$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
+				$human_ressources_director->addAcademicResearcher($data['name'], $data['surname'], $data['office'], $data['area']);
+				$data = $human_ressources_director->getData();
 				echo $this->buildAcademicResearcherTable($data);
 			}
 		}
@@ -298,10 +298,10 @@ class HumanRessourcesDirectorController extends BaseController {
 			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
 			if (isset($data['name']) && isset($data['surname'])) {
-				$humanRessourcesDirector = $this->registry->newModel('HumanRessourcesDirector');
-				$humanRessourcesDirector->deleteAcademicResearcher($data['name'], $data['surname']);
+				$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
+				$human_ressources_director->deleteAcademicResearcher($data['name'], $data['surname']);
 
-				$data = $humanRessourcesDirector->getData();
+				$data = $human_ressources_director->getData();
 				echo $this->buildAcademicResearcherTable($data);
 			}
 		}

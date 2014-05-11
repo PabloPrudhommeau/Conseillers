@@ -20,6 +20,10 @@ class SelectComponent extends BaseComponent {
 		$this->id = $id;
 	}
 
+	public function setEvent($event) {
+		$this->event = htmlspecialchars($event);
+	}
+
 	public function setValue($value) {
 		$this->value = $value;
 	}

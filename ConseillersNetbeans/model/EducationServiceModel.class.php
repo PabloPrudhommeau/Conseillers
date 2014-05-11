@@ -4,61 +4,116 @@ class EducationServiceModel {
 
 	public function getData() {
 		$db = Database::getInstance();
-		$query = $db->query('	SELECT  etu.prenom AS etu_prenom, 
-								etu.nom AS etu_nom, 
-								CONCAT(p.libelle, etu.semestre) AS formation, 
-								ec.nom AS ec_nom
-        FROM etudiant AS etu
-        LEFT JOIN conseiller AS c ON    (c.id_etudiant=etu.id)
-        LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
-        LEFT JOIN liste_pole AS lp ON    (lp.id=ec.id_pole)
-        LEFT JOIN liste_programme AS p ON   (p.id=etu.id_programme)'
+		$query = $db->query('	SELECT  etu.id AS id,
+										etu.prenom AS etu_prenom, 
+										etu.nom AS etu_nom, 
+										CONCAT(p.libelle, etu.semestre) AS formation, 
+										ec.nom AS ec_nom
+						        FROM etudiant AS etu
+						        LEFT JOIN conseiller AS c ON    (c.id_etudiant=etu.id)
+						        LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
+						        LEFT JOIN liste_programme AS p ON   (p.id=etu.id_programme)'
 		);
 		$row = $query->fetchAll();
 		return $row;
 	}
 
+	public function getOrphan() {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT 	etu.nom, 
+										etu.prenom, 
+										CONCAT(lp.libelle, etu.semestre) AS formation 
+								FROM etudiant AS etu
+								LEFT OUTER JOIN conseiller AS c ON ( c.id_etudiant=etu.id)
+								LEFT JOIN liste_programme AS lp ON ( lp.id=etu.id_programme)
+								WHERE c.id_etudiant IS NULL'
+				);
+		$row = $query->fetchAll();
+
+		return $row;
+	}
+
+	public function getStudentByProgram($program) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT  etu.prenom AS etu_prenom, 
+										etu.nom AS etu_nom, 
+										CONCAT(p.libelle, etu.semestre) AS formation, 
+										ec.nom AS ec_nom
+						        FROM etudiant AS etu
+						        LEFT JOIN conseiller AS c ON (c.id_etudiant=etu.id)
+						        LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
+						        LEFT JOIN liste_programme AS p ON (p.id=etu.id_programme)
+						        WHERE p.libelle=\'' . $program . '\''
+				);
+		$row = $query->fetchAll();
+
+		return $row;
+	}
+
 	public function addStudent($student_name, $student_surname, $program, $nb_semester) {
 		$db = Database::getInstance();
-		$query = $db->query(' SELECT id FROM liste_programme
-        WHERE libelle="' . $program . '"'
-		);
-		$progam = $query->fetch();
-		if ($program) {
-			$db->exec('INSERT INTO etudiant(id_programme, nom, prenom, semestre) VALUES (
-                      `' . $program->id . '`,
-                      `' . $student_name . '`,
-                      `' . $student_surname . '`,
-                      `' . $nb_semester . '` 
-                      )'
-			);
+
+		$st = $db->prepare('INSERT INTO etudiant(id_programme, nom, prenom, semestre) VALUES (
+                  ' . self::getProgramId($program) . ',
+                  \'' . self::stdName($student_name) . '\',
+                  \'' . self::stdSurname($student_surname) . '\',
+                  ' . $nb_semester . '
+                  )');
+		$st->execute();
+	}
+
+	public function addStudents($data) {
+		$db = Database::getInstance();
+		$data_affected = array();
+
+		foreach($data as $key => $value) {	
+			$name = self::stdName($value['nom']);
+			$surname = self::stdSurname($value['prenom']);
+			$id_program = self::getProgramId($value['programme']);
+
+			$st = $db->prepare('INSERT INTO etudiant(id, prenom, nom, id_programme, semestre)
+								SELECT * FROM (SELECT 	' . $value['numero'] . ',
+														\'' . $surname . '\',
+														\'' . $name . '\',
+														\'' . $id_program . '\',
+														\'' . $value['semestre'] . '\') AS tmp
+								WHERE NOT EXISTS (
+								    SELECT id FROM etudiant
+								    WHERE id=\'' . $value['numero'] . '\' 
+								) LIMIT 1'
+					);
+			$st->execute();
+			$affected = $st->rowCount();
+
+			if($affected == 1) {
+				$data_affected[$key] = array('nom' => $name,
+									'prenom' => $surname);
+			}
+			
 		}
+
+		return $data_affected;
+	}
+
+	public function purgeStudent() {
+		$db = Database::getInstance();
+		$st = $db->prepare('DELETE FROM conseiller');
+		$st->execute();
+
+		$st = $db->prepare('DELETE FROM etudiant');
+		$st->execute();
 
 		return $this->getData();
 	}
 
-	public function purgeStudentList() {
+	public function deleteStudent($id) {
 		$db = Database::getInstance();
-		$db->exec('DELETE * FROM conseiller');
-		$db->exec('DELETE * FROM etudiant');
 
-		return $this->getData();
-	}
+		$st = $db->prepare('DELETE FROM conseiller WHERE id_etudiant=' . $id);
+		$st->execute();
 
-	public function deleteStudent($student_name, $student_surname) {
-		$db = Database::getInstance();
-		$query = $db->query('	SELECT c.id_etudiant FROM etudiant AS etu
-								LEFT JOIN conseiller AS c ON (c.id_etudiant=etu.id)
-								WHERE etu.nom="'.$student_name.'"
-								AND etu.prenom="'.$student_surname.'"'
-				);
-		$student_conseil = $query->fetch();
-
-		if($student_conseil) {
-			$db->exec('DELETE FROM conseiller WHERE id_etudiant='.$student_conseil->id_etudiant);
-		}
-
-		$db->exec('DELETE FROM etudiant WHERE id_etudiant='.$student_conseil->id_etudiant);
+		$st = $db->prepare('DELETE FROM etudiant WHERE id='.$id);
+		$st->execute();
 
 		return $this->getData();
 	}
@@ -123,13 +178,6 @@ class EducationServiceModel {
 		}
 	}
 
-	public function addStudents($file) {
-		/*
-		 * Ajout d'enseignants pas injection CSV
-		 * Définir si le fichier est lu ici ou avant (idem pour l'upload)
-		 */
-	}
-
 	public function getFormation() {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT libelle FROM liste_programme
@@ -140,27 +188,36 @@ class EducationServiceModel {
 		return $row;
 	}
 
+	public function getAllFormation() {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT libelle FROM liste_programme');
+		$row = $query->fetchAll(PDO::FETCH_COLUMN);
+
+		return $row;
+	}
+
 	public function assignNewStudent($student_name, $student_surname) {
 		$db = Database::getInstance();
-		$query = $db->query(' SELECT	ec.id AS ec_id, 
-										etu.id AS etu_id,
-										COUNT(c.id_enseignant_chercheur) AS nbetu 
-										FROM  etudiant AS etu, 
-										enseignant_chercheur AS ec
-								LEFT JOIN conseiller AS c ON (c.id_enseignant_chercheur=ec.id)
-								LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
-								WHERE etu.nom="'.$student_name.'"
-								AND etu.prenom="'.$student_surname.'"
-								AND etu.id_programme=h.id_programme
-								GROUP BY(c.id_enseignant_chercheur)
-								ORDER BY nbetu ASC'
-				);
-		$row = $query->fetch();
 
-		$st = $db->prepare('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES('.$row->ec_id.','.$row->etu_id.')');
+		$st = $db->prepare('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant)
+							SELECT	ec.id AS ec_id, 
+									etu.id AS etu_id
+									FROM  	etudiant AS etu, 
+											conseiller AS c
+							RIGHT OUTER JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
+							LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
+							WHERE etu.nom="'.$student_name.'"
+							AND etu.prenom="'.$student_surname.'"
+							AND etu.id_programme=h.id_programme
+							GROUP BY(ec.id)
+							ORDER BY SUM(CASE WHEN c.id_etudiant IS NULL THEN 0 ELSE 1 END) ASC
+							LIMIT 1'
+				);
 		$st->execute();
 
-		return $this->getData();
+		$affected = $st->rowCount();
+
+		return $affected;
 	}
 
 	static function etuCompare($a, $b) {
@@ -182,13 +239,13 @@ class EducationServiceModel {
 				);
 		$student = $query->fetchAll();
 
-		$query = $db->query ('	SELECT 	COUNT(c.id_enseignant_chercheur) AS nbetu, 
+		$query = $db->query ('	SELECT 	SUM(CASE WHEN c.id_etudiant IS NULL THEN 0 ELSE 1 END) AS nbetu, 
 										ec.id, 
 										ec.nom AS academic_researcher_name,
 										ec.prenom AS academic_researcher_surname
-								FROM enseignant_chercheur AS ec
-								LEFT JOIN conseiller AS c ON (c.id_enseignant_chercheur=ec.id)
-								GROUP BY(c.id_enseignant_chercheur)
+								FROM conseiller AS c
+								RIGHT OUTER JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
+								GROUP BY(ec.id)
 								ORDER BY nbetu'
 				);
 		$academic_researcher = $query->fetchAll();
@@ -218,18 +275,48 @@ class EducationServiceModel {
 					break;
 				}
 			}
-			$db->exec('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES(' . $academic_researcher_chosen . ', ' . $student_val->id . ')');
-			$assign_logs[$i]['student_name'] = $student_val->student_name;
-			$assign_logs[$i]['student_surname'] = $student_val->student_surname;
-			$assign_logs[$i]['academic_researcher_name'] = $academic_researcher[$academic_researcher_chosen_key]->academic_researcher_name;
-			$assign_logs[$i]['academic_researcher_surname'] = $academic_researcher[$academic_researcher_chosen_key]->academic_researcher_surname;
-			$academic_researcher[$academic_researcher_chosen_key]->nbetu += 1;
-			usort($academic_researcher, array('EducationServiceModel', 'etuCompare'));
+			if($found) {
+				$st = $db->prepare('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES(' . $academic_researcher_chosen . ', ' . $student_val->id . ')');
+				$st->execute();
+				$assign_logs[$i]['student_name'] = $student_val->student_name;
+				$assign_logs[$i]['student_surname'] = $student_val->student_surname;
+				$assign_logs[$i]['academic_researcher_name'] = $academic_researcher[$academic_researcher_chosen_key]->academic_researcher_name;
+				$assign_logs[$i]['academic_researcher_surname'] = $academic_researcher[$academic_researcher_chosen_key]->academic_researcher_surname;
+				$academic_researcher[$academic_researcher_chosen_key]->nbetu += 1;
+				usort($academic_researcher, array('EducationServiceModel', 'etuCompare'));
+			} else {
+				$assign_logs[$i]['student_name'] = $student_val->student_name;
+				$assign_logs[$i]['student_surname'] = $student_val->student_surname;
+				$assign_logs[$i]['academic_researcher_name'] = '';
+				$assign_logs[$i]['academic_researcher_surname'] = '';
+			}
+			
 			$academic_researcher_chosen = '';
 			$found = false;
 			$i++;
 		}
 		return $assign_logs;
+	}
+
+	function getProgramId($label) {
+		$db = Database::getInstance();
+		$query = $db->query('SELECT id FROM liste_programme 
+							WHERE libelle=\'' . $label . '\'');
+		$row = $query->fetch();
+
+		if($row) {
+			return $row->id;
+		} else {
+			return 1;
+		}
+	}
+
+	function stdName($name) {
+		return strtoupper($name);
+	}
+
+	function stdSurname($surname) {
+		return strtoupper(substr($surname, 0, 1)).strtolower(substr($surname, 1));
 	}
 
 }

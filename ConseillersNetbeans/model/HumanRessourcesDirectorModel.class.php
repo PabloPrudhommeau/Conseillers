@@ -92,6 +92,8 @@ class HumanRessourcesDirectorModel {
 																						\'' . self::getWorkGroupId($research_group) . '\')'
 				);
 		$st->execute();
+
+		self::habilitationDefault($name, $surname);
 	}
 
 	public function getArea() {
@@ -126,6 +128,7 @@ class HumanRessourcesDirectorModel {
 			$affected = $st->rowCount();
 
 			if($affected == 1) {
+				self::habilitationDefault($name, $surname);
 				$data_affected[$key] = array('nom' => $name,
 									'prenom' => $surname);
 			}
@@ -187,6 +190,19 @@ class HumanRessourcesDirectorModel {
 
 	function stdSurname($surname) {
 		return strtoupper(substr($surname, 0, 1)).strtolower(substr($surname, 1));
+	}
+
+	function habilitationDefault($name, $surname) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT id FROM enseignant_chercheur
+								WHERE nom=\'' . $name . '\'
+								AND prenom=\'' . $surname . '\''
+				);
+
+		$id_enseignant_chercheur = $query->fetch();
+
+		$st = $db->prepare('INSERT INTO habilitation(id_enseignant_chercheur, id_programme) VALUES (' . $id_enseignant_chercheur->id . ', 1)');
+		$st->execute();
 	}
 
 }

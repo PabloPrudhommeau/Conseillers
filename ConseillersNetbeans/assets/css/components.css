@@ -184,6 +184,7 @@ table.table-manage-data #table-hidden-row td {
 	background:#d0dbc5;
 	border-radius:5px;
 	margin:15px;
+	margin-left: 0px;
 }
 .widget-button-advanced td, .widget-button-advanced img{
 	vertical-align:middle;
@@ -208,6 +209,7 @@ button.widget-button-classic {
 	border-radius:5px;
 	cursor:pointer;
 	margin:15px;
+	margin-left: 0px;
 	font-family:inherit;
 }
 /*°°°°°°°°°°°°°°°°°°°°°°*/
