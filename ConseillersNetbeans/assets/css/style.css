@@ -108,7 +108,12 @@ header {
 
 .menu-row {
 	width:100%;
-	background:#000;
+	background:#555;
+}
+
+#logo {
+	height:50px;
+	padding:10px 10px 10px 0;
 }
 
 /*********************************content*************************************/

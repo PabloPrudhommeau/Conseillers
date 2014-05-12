@@ -26,6 +26,7 @@
 				<?php echo $widget_menu_feature; ?>
 				<div class="main">
 					<nav class="wrapper">
+					<img id="logo" src="<?php echo __SITE_ROOT . '/assets/img/logo_utt.png'; ?>"/>
 						<?php echo $widget_menu_main; ?>
 					</nav>
 				</div>

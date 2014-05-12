@@ -27,7 +27,7 @@ $(document).ready(function() {
 	});
 	$('ul.widget-menu-main li a').on('mouseout', function() {
 		$(this).stop(true, false).animate({
-			color: "#808080"
+			color: "#bfbfbf"
 		}, 300);
 	});
 });
