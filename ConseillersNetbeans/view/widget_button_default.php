@@ -1,1 +1,3 @@
-<img class="widget-button-default <?php echo $class; ?>" src="<?php echo $image; ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" action="<?php echo $action;?>"/></td>
+<div class="widget-button-default <?php echo $class; ?>" action="<?php echo $action; ?>">
+	<?php echo $label; ?>
+</div>

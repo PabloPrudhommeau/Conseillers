@@ -6,7 +6,7 @@ class FormComponent extends BaseComponent {
 	private $request = array();
 	private $syntax_errors = array();
 	private $common_errors = array();
-	
+
 	public function init($method, $action, $data = '') {
 		$this->method = $method;
 		$this->action = $action;
@@ -34,7 +34,7 @@ class FormComponent extends BaseComponent {
 		$this->syntax_errors[] = array('field_label' => $field_label, 'reason' => $reason);
 	}
 
-	public function addCommonError($error){
+	public function addCommonError($error) {
 		$this->common_errors[] = $error;
 	}
 
@@ -45,7 +45,7 @@ class FormComponent extends BaseComponent {
 	public function getFile() {
 		return $this->file;
 	}
-	
+
 	public function isValid() {
 		if (!empty($_POST) || !empty($_FILES)) {
 			foreach ($_POST as $key => $val) {
@@ -74,11 +74,11 @@ class FormComponent extends BaseComponent {
 								}
 								break;
 							case 'file_added':
-								if($_FILES['file']['error'] == 4) {
+								if ($_FILES['file']['error'] == 4) {
 									$this->addSyntaxError($field['label'], 'Aucun fichier n\'a été ajouté');
 								} else {
 									$this->setFile($_FILES);
-								}								
+								}
 								break;
 							default:
 								break;
@@ -101,7 +101,7 @@ class FormComponent extends BaseComponent {
 			foreach ($this->fields_data[$key]['data'] as $key2 => $val) {
 				$field .= ' ' . $key2 . '="' . $val . '"';
 			}
-			$field .= ' value="' . $this->getFieldValue($this->fields_data[$key]['name']) . '"';	
+			$field .= ' value="' . $this->getFieldValue($this->fields_data[$key]['name']) . '"';
 			array_push($temp_fields, array('label' => $label, 'field' => $field));
 		}
 		$this->fields = $temp_fields;

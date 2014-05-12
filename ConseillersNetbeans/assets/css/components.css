@@ -95,8 +95,17 @@ ul.widget-menu-feature-list li a{
 /* ----------------------- */
 /* Composant table général */
 /* ----------------------- */
-table.table-component td{
-	width:122px;
+table.table-component, .widget-button-default {
+	-moz-user-select: -moz-none;
+	-moz-user-select: none;
+	-o-user-select:none;
+	-khtml-user-select:none; /* you could also put this in a class */
+	-webkit-user-select:none;/* and add the CSS class here instead */
+	-ms-user-select:none;
+	user-select:none;
+}
+table.table-component td {
+	width:152px;
 }
 table.table-component input, select {
 	width: 116px;
@@ -171,8 +180,48 @@ table.table-manage-data #table-hidden-row td {
 /* Widget Button Default   */
 /* ----------------------- */
 .widget-button-default {
+	display:inline-block;
 	cursor:pointer;
+	width:20px;
+	height:20px;
 }
+.widget-button-default.check {
+	background: url('../img/check.png') center center no-repeat;
+	width:20px;
+	height:20px;
+}
+.widget-button-default.none {
+	background: url('../img/none.png') center center no-repeat;
+	width:20px;
+	height:20px;
+}
+.widget-button-default.add {
+	background: url('../img/plus.png') center center no-repeat;
+}	
+.widget-button-default.add-button-extend {
+	background: url('../img/add.png') 6px  center no-repeat #dcf1ce;
+	padding:5px 9px 5px 33px;
+	width:auto;
+	height:inherit;
+	border-radius:5px;
+}
+.widget-button-default.add-active {
+	background: url('../img/plus.gif') center center no-repeat;
+	width:20px;
+	height:20px;
+}
+.widget-button-default.add-inactive {
+	background: url('../img/plus_grey.gif') center center no-repeat;
+	width:20px;
+	height:20px;
+
+}
+.widget-button-default.delete-button, .widget-button-default.cancel-button {
+	background: url('../img/croix.png') center center no-repeat;
+	width:20px;
+	height:20px;
+}
+
 /*°°°°°°°°°°°°°°°°°°°°°°*/
 
 

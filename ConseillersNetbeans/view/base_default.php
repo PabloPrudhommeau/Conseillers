@@ -23,7 +23,7 @@
 		<!--==============================header=================================-->
 		<header>
 			<div class="menu-row">
-			<?php echo $widget_menu_feature; ?>
+				<?php echo $widget_menu_feature; ?>
 				<div class="main">
 					<nav class="wrapper">
 						<?php echo $widget_menu_main; ?>

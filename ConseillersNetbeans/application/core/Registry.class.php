@@ -14,7 +14,7 @@ class Registry {
 			return new $name;
 		}
 	}
-	
+
 	public function newModel($name) {
 		$name = ucwords($name) . 'Model';
 		$file = __SITE_PATH . '/model/' . $name . '.class.php';
@@ -22,14 +22,14 @@ class Registry {
 			throw new Exception('Le modèle ' . $name . ' n\'existe pas');
 		} else {
 			require_once $file;
-			if(method_exists($name, 'getInstance')){
+			if (method_exists($name, 'getInstance')) {
 				return $name::getInstance();
 			} else {
 				return new $name;
 			}
 		}
 	}
-	
+
 	public function __set($index, $value) {
 		$this->vars[$index] = $value;
 	}

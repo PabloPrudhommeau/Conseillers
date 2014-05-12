@@ -1,1 +1,1 @@
-<button class="widget-button-classic" action="<?php echo $action;?>"><?php echo $label;?></button>
+<button class="widget-button-classic" action="<?php echo $action; ?>"><?php echo $label; ?></button>

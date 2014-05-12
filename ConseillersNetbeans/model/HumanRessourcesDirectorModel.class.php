@@ -7,7 +7,7 @@ class HumanRessourcesDirectorModel {
 		$query = $db->query('	SELECT ec.prenom, ec.nom, ec.bureau, lp.libelle
 								FROM enseignant_chercheur AS ec
 								LEFT JOIN liste_pole AS lp ON ( lp.id = ec.id_pole )'
-				);
+		);
 		$row = $query->fetchAll();
 
 		return $row;
@@ -21,7 +21,7 @@ class HumanRessourcesDirectorModel {
 								LEFT JOIN liste_pole AS lp ON ( lp.id = ec.id_pole )
 								GROUP BY (ec.id)
 								ORDER BY nbetu DESC'
-				);
+		);
 		$row = $query->fetchAll();
 
 		return $row;
@@ -34,7 +34,7 @@ class HumanRessourcesDirectorModel {
 								LEFT JOIN enseignant_chercheur AS ec ON ( ec.id = c.id_enseignant_chercheur )
 								LEFT JOIN liste_pole AS lp ON ( lp.id = ec.id_pole )
 								GROUP BY c.id_enseignant_chercheur'
-				);
+		);
 		$row = $query->fetchAll();
 
 		return $row;
@@ -53,12 +53,12 @@ class HumanRessourcesDirectorModel {
 								LEFT JOIN etudiant AS etu ON ( etu.id=c.id_etudiant )
 								LEFT JOIN liste_programme AS lp ON ( lp.id=etu.id_programme )
 								WHERE etu.prenom IS NOT NULL'
-				);
+		);
 		$counsellor_student = $query->fetchAll();
 		$structured_data = array();
 
 		foreach ($counsellor_student as $key => $value) {
-			$structured_data_key =  $value->ec_prenom.'&nbsp;'.$value->ec_nom;
+			$structured_data_key = $value->ec_prenom . '&nbsp;' . $value->ec_nom;
 			unset($value->ec_prenom);
 			unset($value->ec_nom);
 			$structured_data[$structured_data_key][] = $value;
@@ -90,7 +90,7 @@ class HumanRessourcesDirectorModel {
 																						\'' . self::stdSurname($surname) . '\',
 																						\'' . $office . '\',
 																						\'' . self::getWorkGroupId($research_group) . '\')'
-				);
+		);
 		$st->execute();
 
 		self::habilitationDefault($name, $surname);
@@ -108,7 +108,7 @@ class HumanRessourcesDirectorModel {
 		$db = Database::getInstance();
 		$data_affected = array();
 
-		foreach($data as $key => $value) {	
+		foreach ($data as $key => $value) {
 			$name = self::stdName($value['nom']);
 			$surname = self::stdSurname($value['prenom']);
 			$id_work_group = self::getWorkGroupId($value['pole']);
@@ -123,20 +123,18 @@ class HumanRessourcesDirectorModel {
 								    WHERE nom=\'' . $name . '\' 
 								    AND prenom=\'' . $surname . '\'
 								) LIMIT 1'
-					);
+			);
 			$st->execute();
 			$affected = $st->rowCount();
 
-			if($affected == 1) {
+			if ($affected == 1) {
 				self::habilitationDefault($name, $surname);
 				$data_affected[$key] = array('nom' => $name,
-									'prenom' => $surname);
+					'prenom' => $surname);
 			}
-			
 		}
 
 		return $data_affected;
-
 	}
 
 	public function purgeAcademicResearcher() {
@@ -157,7 +155,7 @@ class HumanRessourcesDirectorModel {
 		$query = $db->query('	SELECT id FROM enseignant_chercheur 
 								WHERE nom="' . $name . '" 
 								AND prenom="' . $surname . '"'
-				);
+		);
 		$id_academic_researcher = $query->fetch();
 
 		$st = $db->prepare('DELETE FROM habilitation WHERE id_enseignant_chercheur=' . $id_academic_researcher->id);
@@ -174,10 +172,10 @@ class HumanRessourcesDirectorModel {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT id FROM liste_pole
 								WHERE libelle=\'' . $label . '\''
-				);
+		);
 		$row = $query->fetch();
 
-		if($row) {
+		if ($row) {
 			return $row->id;
 		} else {
 			return NULL;
@@ -189,7 +187,7 @@ class HumanRessourcesDirectorModel {
 	}
 
 	function stdSurname($surname) {
-		return strtoupper(substr($surname, 0, 1)).strtolower(substr($surname, 1));
+		return strtoupper(substr($surname, 0, 1)) . strtolower(substr($surname, 1));
 	}
 
 	function habilitationDefault($name, $surname) {
@@ -197,7 +195,7 @@ class HumanRessourcesDirectorModel {
 		$query = $db->query('	SELECT id FROM enseignant_chercheur
 								WHERE nom=\'' . $name . '\'
 								AND prenom=\'' . $surname . '\''
-				);
+		);
 
 		$id_enseignant_chercheur = $query->fetch();
 

@@ -1,7 +1,7 @@
 <?php
 
 class ErrorController extends BaseController {
-	
+
 	public function __construct($registry) {
 		parent::__construct($registry);
 		$this->registry->template->page_first_title = 'Oops ! Une erreur s\'est produite...';

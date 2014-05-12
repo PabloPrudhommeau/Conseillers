@@ -40,6 +40,7 @@ $(document).ready(function() {
 	});
 });
 
+//Composant table
 $(document).ready(function() {
 	$(document).on('mouseenter', '.deletable-row', function() {
 		$(this).find('.delete-button').fadeIn(100);
@@ -54,7 +55,7 @@ $(document).ready(function() {
 	$(document).on('change', '#fichier-CSV', function() {
 		var file = $('#fichier-CSV').val();
 		var ext = file.substr(file.length - 4, 4);
-		if(ext != '.csv') {
+		if (ext != '.csv') {
 			window.alert('Le fichier doit être au format .csv');
 			$('#fichier-CSV').val('');
 		}

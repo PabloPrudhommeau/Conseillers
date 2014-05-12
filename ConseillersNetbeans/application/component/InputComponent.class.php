@@ -11,7 +11,7 @@ class InputComponent extends BaseComponent {
 	public function setId($id) {
 		$this->id = $id;
 	}
-	
+
 	public function setName($name) {
 		$this->name = $name;
 	}

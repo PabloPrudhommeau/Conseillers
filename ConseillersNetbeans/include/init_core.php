@@ -10,5 +10,4 @@ include __SITE_PATH . '/application/core/Router.class.php';
 include __SITE_PATH . '/application/core/Template.class.php';
 /* * * include the database class ** */
 include __SITE_PATH . '/model/Database.class.php';
-
 ?>

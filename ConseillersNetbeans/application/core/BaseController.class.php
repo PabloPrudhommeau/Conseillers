@@ -7,10 +7,9 @@ abstract class BaseController {
 
 	public function __construct($registry) {
 		$this->registry = $registry;
-
 	}
-	
-	public function isSecure(){
+
+	public function isSecure() {
 		return $this->secure;
 	}
 

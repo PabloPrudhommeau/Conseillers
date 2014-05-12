@@ -6,11 +6,11 @@ class TableComponent extends BaseComponent {
 	private $data_row = array();
 	private $data_hidden_row = array();
 	private $data_hidden_row_class = 'hidden-row';
-	
-	public function setCaption($title){
+
+	public function setCaption($title) {
 		$this->caption = $title;
 	}
-	
+
 	public function setDataRow($arr = array()) {
 		$this->data_row = $arr;
 	}

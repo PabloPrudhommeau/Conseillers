@@ -9,7 +9,7 @@ function ajax_send(target, datas, return_to_div) {
 			url: target,
 			data: obj
 		}).done(function(data) {
-			if (typeof return_to_div !== 'undefined' && data != '') {
+			if (typeof return_to_div !== 'undefined' && data !== '') {
 				$(return_to_div).html(data);
 			}
 		});

@@ -27,7 +27,7 @@ class EducationServiceModel {
 								LEFT OUTER JOIN conseiller AS c ON ( c.id_etudiant=etu.id)
 								LEFT JOIN liste_programme AS lp ON ( lp.id=etu.id_programme)
 								WHERE c.id_etudiant IS NULL'
-				);
+		);
 		$row = $query->fetchAll();
 
 		return $row;
@@ -44,7 +44,7 @@ class EducationServiceModel {
 						        LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
 						        LEFT JOIN liste_programme AS p ON (p.id=etu.id_programme)
 						        WHERE p.libelle=\'' . $program . '\''
-				);
+		);
 		$row = $query->fetchAll();
 
 		return $row;
@@ -66,7 +66,7 @@ class EducationServiceModel {
 		$db = Database::getInstance();
 		$data_affected = array();
 
-		foreach($data as $key => $value) {	
+		foreach ($data as $key => $value) {
 			$name = self::stdName($value['nom']);
 			$surname = self::stdSurname($value['prenom']);
 			$id_program = self::getProgramId($value['programme']);
@@ -81,15 +81,14 @@ class EducationServiceModel {
 								    SELECT id FROM etudiant
 								    WHERE id=\'' . $value['numero'] . '\' 
 								) LIMIT 1'
-					);
+			);
 			$st->execute();
 			$affected = $st->rowCount();
 
-			if($affected == 1) {
+			if ($affected == 1) {
 				$data_affected[$key] = array('nom' => $name,
-									'prenom' => $surname);
+					'prenom' => $surname);
 			}
-			
 		}
 
 		return $data_affected;
@@ -112,7 +111,7 @@ class EducationServiceModel {
 		$st = $db->prepare('DELETE FROM conseiller WHERE id_etudiant=' . $id);
 		$st->execute();
 
-		$st = $db->prepare('DELETE FROM etudiant WHERE id='.$id);
+		$st = $db->prepare('DELETE FROM etudiant WHERE id=' . $id);
 		$st->execute();
 
 		return $this->getData();
@@ -121,28 +120,28 @@ class EducationServiceModel {
 	public function alreadyExists($student_name, $student_surname) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT etu.id FROM etudiant
-								WHERE nom="'.$student_name.'"
-								AND prenom="'.$student_surname.'"'
-				);
+								WHERE nom="' . $student_name . '"
+								AND prenom="' . $student_surname . '"'
+		);
 		$row = $query->fetch();
-		if($row) {
+		if ($row) {
 			return true;
 		} else {
 			return false;
-		}	
+		}
 	}
 
 	public function formationTransfert($student_name, $student_surname, $formation_transfert) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT id FROM liste_programme
-								WHERE libelle="'.$formation_transfert.'"'
-				);
+								WHERE libelle="' . $formation_transfert . '"'
+		);
 		$id_formation_transfert = $query->fetch();
 
 		$query = $db->query('	SELECT id FROM etudiant
-										WHERE nom="'.$student_name.'"
-										AND prenom="'.$student_surname.'"'
-						);
+										WHERE nom="' . $student_name . '"
+										AND prenom="' . $student_surname . '"'
+		);
 		$id_student = $query->fetch();
 
 		$query = $db->query('	SELECT 	ec.id,
@@ -151,24 +150,24 @@ class EducationServiceModel {
 								LEFT JOIN conseiller AS c ON 			(c.id_etudiant=etu.id)
 								LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
 								LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
-								WHERE etu.id='.$id_student->id
-				);
+								WHERE etu.id=' . $id_student->id
+		);
 		$id_conseilor = $query->fetchAll();
 
 		$authorized = false;
 
-		if($id_conseilor) {
+		if ($id_conseilor) {
 			foreach ($id_conseilor as $value) {
-				if($value->id_programme == $id_formation_transfert) {
+				if ($value->id_programme == $id_formation_transfert) {
 					$authorized = true;
 					break;
 				}
 			}
 
-			$db->exec('UPDATE etudiant SET id_programme='.$id_formation_transfert->id.' WHERE id='.$id_student->id);
+			$db->exec('UPDATE etudiant SET id_programme=' . $id_formation_transfert->id . ' WHERE id=' . $id_student->id);
 
-			if(!$authorized) {
-				$db->exec('DELETE FROM conseiller WHERE id_etudiant='.$id_student->id);
+			if (!$authorized) {
+				$db->exec('DELETE FROM conseiller WHERE id_etudiant=' . $id_student->id);
 				return $this->assignNewStudent($student_name, $student_surname);
 			} else {
 				return $this->getData();
@@ -182,7 +181,7 @@ class EducationServiceModel {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT libelle FROM liste_programme
 								WHERE libelle <> "TC" '
-				);
+		);
 		$row = $query->fetchAll();
 
 		return $row;
@@ -206,13 +205,13 @@ class EducationServiceModel {
 											conseiller AS c
 							RIGHT OUTER JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
 							LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
-							WHERE etu.nom="'.$student_name.'"
-							AND etu.prenom="'.$student_surname.'"
+							WHERE etu.nom="' . $student_name . '"
+							AND etu.prenom="' . $student_surname . '"
 							AND etu.id_programme=h.id_programme
 							GROUP BY(ec.id)
 							ORDER BY SUM(CASE WHEN c.id_etudiant IS NULL THEN 0 ELSE 1 END) ASC
 							LIMIT 1'
-				);
+		);
 		$st->execute();
 
 		$affected = $st->rowCount();
@@ -236,10 +235,10 @@ class EducationServiceModel {
 								FROM etudiant AS etu
 								LEFT OUTER JOIN conseiller AS c ON (c.id_etudiant=etu.id)
 								WHERE c.id_etudiant is NULL'
-				);
+		);
 		$student = $query->fetchAll();
 
-		$query = $db->query ('	SELECT 	SUM(CASE WHEN c.id_etudiant IS NULL THEN 0 ELSE 1 END) AS nbetu, 
+		$query = $db->query('	SELECT 	SUM(CASE WHEN c.id_etudiant IS NULL THEN 0 ELSE 1 END) AS nbetu, 
 										ec.id, 
 										ec.nom AS academic_researcher_name,
 										ec.prenom AS academic_researcher_surname
@@ -247,7 +246,7 @@ class EducationServiceModel {
 								RIGHT OUTER JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
 								GROUP BY(ec.id)
 								ORDER BY nbetu'
-				);
+		);
 		$academic_researcher = $query->fetchAll();
 
 		$query = $db->query('  SELECT h.* 
@@ -275,7 +274,7 @@ class EducationServiceModel {
 					break;
 				}
 			}
-			if($found) {
+			if ($found) {
 				$st = $db->prepare('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant) VALUES(' . $academic_researcher_chosen . ', ' . $student_val->id . ')');
 				$st->execute();
 				$assign_logs[$i]['student_name'] = $student_val->student_name;
@@ -290,7 +289,7 @@ class EducationServiceModel {
 				$assign_logs[$i]['academic_researcher_name'] = '';
 				$assign_logs[$i]['academic_researcher_surname'] = '';
 			}
-			
+
 			$academic_researcher_chosen = '';
 			$found = false;
 			$i++;
@@ -304,7 +303,7 @@ class EducationServiceModel {
 							WHERE libelle=\'' . $label . '\'');
 		$row = $query->fetch();
 
-		if($row) {
+		if ($row) {
 			return $row->id;
 		} else {
 			return 1;
@@ -316,7 +315,7 @@ class EducationServiceModel {
 	}
 
 	function stdSurname($surname) {
-		return strtoupper(substr($surname, 0, 1)).strtolower(substr($surname, 1));
+		return strtoupper(substr($surname, 0, 1)) . strtolower(substr($surname, 1));
 	}
 
 }

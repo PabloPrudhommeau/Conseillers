@@ -24,7 +24,7 @@ class HomeController extends BaseController {
 				$password = $form->getFieldValue('password');
 				$token = $auth->getToken($user, $password);
 				if ($token) {
-					$this->registry->Authentification->signin($user, $password, $token['statut']);
+					$this->registry->Authentification->signin($user, $password, $token);
 					$this->registry->Authentification->goHome();
 				} else {
 					$form->addCommonError('Ce couple utilisateur/mot de passe n\'a pas permis de vous authentifier');

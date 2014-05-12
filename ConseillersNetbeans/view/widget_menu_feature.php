@@ -5,7 +5,7 @@
 			<?php
 			foreach ($links as $val) {
 				?>
-				<li class="<?php echo $val['class'];?>"><a href="<?php echo __SITE_ROOT . $val['href']; ?>"><?php echo $val['value']; ?></a></li>
+				<li class="<?php echo $val['class']; ?>"><a href="<?php echo __SITE_ROOT . $val['href']; ?>"><?php echo $val['value']; ?></a></li>
 				<?php
 			}
 			?>

@@ -20,10 +20,10 @@ class FrontController {
 		//Menu fonctionnalités
 		$menu_feature = $this->registry->newComponent('MenuWidget');
 		if ($this->registry->Authentification->isLogOn()) {
-			$statut = $this->registry->Authentification->getStatut();
+			$statut = $this->registry->Authentification->getSession('statut');
 			if (!empty($this->registry->json_data->links->$statut->features)) {
-				
-				foreach($this->registry->json_data->links->$statut->features as $key => $val){
+
+				foreach ($this->registry->json_data->links->$statut->features as $key => $val) {
 					$menu_feature->addLink(array('value' => $key, 'href' => $val));
 				}
 			}

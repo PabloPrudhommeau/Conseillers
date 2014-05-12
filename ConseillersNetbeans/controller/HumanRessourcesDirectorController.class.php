@@ -17,10 +17,10 @@ class HumanRessourcesDirectorController extends BaseController {
 		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 
 		$button = $this->registry->newComponent('ButtonWidget');
-		$button->setImage('add.png');
+		$button->setClass('add-button-extend');
 		$button->setAction('showHideElement(\'#table-hidden-row\')');
 		$button->setLabel('Ajouter enseignant');
-		$content .= $button->createView('widget_button_advanced');
+		$content .= $button->createView() . '<br/><br/>';
 
 		$data = $human_ressources_director->getData();
 		$this->registry->template->content = $content . $this->buildAcademicResearcherTable($data);
@@ -35,22 +35,22 @@ class HumanRessourcesDirectorController extends BaseController {
 		$form->addField('Fichier', 'file', array('type' => 'file', 'maxlength' => '20', 'id' => 'fichier-CSV'))
 				->addFieldRule('file', array('rule_type' => 'operator', 'rule_value' => 'file_added', 'rule_bool' => false));
 
-		if($form->isValid()) {
+		if ($form->isValid()) {
 			$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 			$file = $form->getFile();
 
 			$csv_header = array('prenom', 'nom', 'bureau', 'pole');
 
-			if(!file_exists($file['file']['tmp_name']) || !is_readable($file['file']['tmp_name'])) {
+			if (!file_exists($file['file']['tmp_name']) || !is_readable($file['file']['tmp_name'])) {
 				$form->addCommonError('Un problème a été rencontré à la lecture du fichier');
 			} else {
 				$header = NULL;
 				$data = array();
 				$error = false;
-				if(($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
-					while(($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
-						if(!$header) {
-							if($row == $csv_header) {
+				if (($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
+					while (($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
+						if (!$header) {
+							if ($row == $csv_header) {
 								$header = $row;
 							} else {
 								$form->addCommonError('Ce fichier ne correspond pas au format attendu');
@@ -58,7 +58,7 @@ class HumanRessourcesDirectorController extends BaseController {
 								break;
 							}
 						} else {
-							if(count($header) != count($row)) {
+							if (count($header) != count($row)) {
 								$form->addCommonError('Une erreur a été rencontré pendant la lectures des données, vérifiez leur formalisme et recommencez');
 								$error = true;
 							} else {
@@ -69,11 +69,11 @@ class HumanRessourcesDirectorController extends BaseController {
 					fclose($handle);
 				}
 
-				if(!$error) {
+				if (!$error) {
 					$affected_data = $human_ressources_director->addAcademicResearchers($data);
 					$content .= '<br/>';
 
-					switch(count($affected_data)) {
+					switch (count($affected_data)) {
 						case 0:
 							$content .= 'Aucun enseignant n\'a été ajouté';
 							break;
@@ -90,12 +90,11 @@ class HumanRessourcesDirectorController extends BaseController {
 					foreach ($affected_data as $val) {
 						$content .= '* Ajout de l\'enseignant <b>' . $val['prenom'] . ' ' . $val['nom'] . '</b><br/>';
 					}
-
 				}
 			}
 		}
 
-		$this->registry->template->content = $form->createView().$content;
+		$this->registry->template->content = $form->createView() . $content;
 		$this->registry->template->show();
 	}
 
@@ -177,7 +176,6 @@ class HumanRessourcesDirectorController extends BaseController {
 		$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 		$data = $human_ressources_director->getData();
 		$button_delete = $this->registry->newComponent('ButtonWidget');
-		$button_delete->setImage('croix.png');
 		$button_delete->setClass('delete-button');
 
 		foreach ($data as &$val) {
@@ -208,10 +206,10 @@ class HumanRessourcesDirectorController extends BaseController {
 		$select_area->setId('area-researcher');
 
 		$button_add = $this->registry->newComponent('ButtonWidget');
-		$button_add->setImage('plus_grey.gif');
+		$button_add->setClass('add-inactive');
 
 		$button_cancel = $this->registry->newComponent('ButtonWidget');
-		$button_cancel->setImage('croix.png');
+		$button_cancel->setClass('cancel-button');
 		$button_cancel->setAction('showHideElement(\'#table-hidden-row\')');
 
 		$ajax_content->setContent($button_add->createView());
@@ -261,7 +259,7 @@ class HumanRessourcesDirectorController extends BaseController {
 					$ajax_content->setClass('ajax-return');
 					if (!$human_ressources_director->alreadyExists($data['name'], $data['surname'])) {
 						$button_add = $this->registry->newComponent('ButtonWidget');
-						$button_add->setImage('plus.gif');
+						$button_add->setClass('add-active');
 						$button_add->setAction('ajax_send(\'' . __SITE_ROOT . '/HumanRessourcesDirector/addAcademicResearcherAjax/\',\'' . $json_ajax_data . '\',\'.table-manage-data\');');
 
 						$ajax_content->setContent($button_add->createView());
@@ -269,7 +267,7 @@ class HumanRessourcesDirectorController extends BaseController {
 						echo $ajax_content->createView();
 					} else {
 						$button_add = $this->registry->newComponent('ButtonWidget');
-						$button_add->setImage('plus_grey.gif');
+						$button_add->setClass('add-inactive');
 
 						$ajax_content->setContent($button_add->createView());
 

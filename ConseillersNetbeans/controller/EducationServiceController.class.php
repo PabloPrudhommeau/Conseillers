@@ -46,10 +46,10 @@ class EducationServiceController extends BaseController {
 		$education_service = $this->registry->newModel('EducationService');
 
 		$button = $this->registry->newComponent('ButtonWidget');
-		$button->setImage('add.png');
+		$button->setClass('add-button-extend');
 		$button->setAction('showHideElement(\'#table-hidden-row\')');
 		$button->setLabel('Ajouter étudiant');
-		$content .= $button->createView('widget_button_advanced');
+		$content .= $button->createView() . '<br/><br/>';
 
 		$data = $education_service->getData();
 		$this->registry->template->content = $content . $this->buildManageStudentTable($data);
@@ -75,24 +75,21 @@ class EducationServiceController extends BaseController {
 		$education_service = $this->registry->newModel('EducationService');
 
 		$button_delete = $this->registry->newComponent('ButtonWidget');
-		$button_delete->setImage('croix.png');
 		$button_delete->setClass('delete-button');
 
 		foreach ($data as $val) {
 			if ($val->ec_nom == "") {
 				$button = $this->registry->newComponent('ButtonWidget');
-				$json_ajax_data = json_encode(array('name' => $val->etu_nom, 'first_name' => $val->etu_prenom));
-				$button->setImage('plus.gif');
+				$json_ajax_data = json_encode(array('name' => $val->etu_nom, 'surname' => $val->etu_prenom));
+				$button->setClass('add-active');
 				$button->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/AssignNewStudentAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
 				$val->ec_nom = $button->createView();
 			}
 
 			$json_ajax_delete_data = json_encode(array('id' => $val->id));
-			$button_delete->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/DeleteStudentAjax/\',\'' .
-					$json_ajax_delete_data . '\',\'.ajax-return\');');
+			$button_delete->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/DeleteStudentAjax/\',\'' . $json_ajax_delete_data . '\',\'.ajax-return\');');
 			$val->del_button = $button_delete->createView();
 			unset($val->id);
-
 		}
 
 		$input_name = $this->registry->newComponent('Input');
@@ -110,27 +107,27 @@ class EducationServiceController extends BaseController {
 		$input_semester->setPlaceHolder('Semestre');
 
 		$json_ajax_data = json_encode(array('surname' => '\'+$(\'#student-surname\').val()+\'',
-						'name' => '\'+$(\'#student-name\').val()+\'',
-						'formation' => '\'+$(\'#student-formation\').val()+\'',
-						'semester' => '\'+$(\'#student-semester\').val()+\''
-					));
+			'name' => '\'+$(\'#student-name\').val()+\'',
+			'formation' => '\'+$(\'#student-formation\').val()+\'',
+			'semester' => '\'+$(\'#student-semester\').val()+\''
+		));
 
 		$button_add = $this->registry->newComponent('ButtonWidget');
-		$button_add->setImage('plus.gif');
+		$button_add->setClass('add-inactive');
 		$button_add->setAction('ajax_send(\'' . __SITE_ROOT . '/EducationService/AddStudentAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
 
 		$button_cancel = $this->registry->newComponent('ButtonWidget');
-		$button_cancel->setImage('croix.png');
+		$button_cancel->setClass('cancel-button');
 		$button_cancel->setAction('showHideElement(\'#table-hidden-row\')');
 
 		$table = $this->registry->newComponent('Table');
 		$table->setDataHeader(array('Prenom', 'Nom', 'Formation', 'Conseillé assigné'));
 		$table->setDataRow($data);
 		$table->setHiddenRow(array($input_surname->createView(),
-									$input_name->createView(),
-									$student_formation->createView() . $input_semester->createView(),
-									$button_add->createView(),
-									$button_cancel->createView()
+			$input_name->createView(),
+			$student_formation->createView() . $input_semester->createView(),
+			$button_add->createView(),
+			$button_cancel->createView()
 		));
 		$table->setRowClass('deletable-row');
 
@@ -151,22 +148,22 @@ class EducationServiceController extends BaseController {
 		$form->addField('Fichier', 'file', array('type' => 'file', 'maxlength' => '20', 'id' => 'fichier-CSV'))
 				->addFieldRule('file', array('rule_type' => 'operator', 'rule_value' => 'file_added', 'rule_bool' => false));
 
-		if($form->isValid()) {
+		if ($form->isValid()) {
 			$education_service = $this->registry->newModel('EducationService');
 			$file = $form->getFile();
 
 			$csv_header = array('numero', 'prenom', 'nom', 'programme', 'semestre');
 
-			if(!file_exists($file['file']['tmp_name']) || !is_readable($file['file']['tmp_name'])) {
+			if (!file_exists($file['file']['tmp_name']) || !is_readable($file['file']['tmp_name'])) {
 				$form->addCommonError('Un problème a été rencontré à la lecture du fichier');
 			} else {
 				$header = NULL;
 				$data = array();
 				$error = false;
-				if(($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
-					while(($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
-						if(!$header) {
-							if($row == $csv_header) {
+				if (($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
+					while (($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
+						if (!$header) {
+							if ($row == $csv_header) {
 								$header = $row;
 							} else {
 								$form->addCommonError('Ce fichier ne correspond pas au format attendu');
@@ -174,7 +171,7 @@ class EducationServiceController extends BaseController {
 								break;
 							}
 						} else {
-							if(count($header) != count($row)) {
+							if (count($header) != count($row)) {
 								$form->addCommonError('Une erreur a été rencontré pendant la lectures des données, vérifiez leur formalisme et recommencez');
 								$error = true;
 							} else {
@@ -185,11 +182,11 @@ class EducationServiceController extends BaseController {
 					fclose($handle);
 				}
 
-				if(!$error) {
+				if (!$error) {
 					$affected_data = $education_service->addStudents($data);
 					$content .= '<br/>';
 
-					switch(count($affected_data)) {
+					switch (count($affected_data)) {
 						case 0:
 							$content .= 'Aucun étudiant n\'a été ajouté';
 							break;
@@ -206,12 +203,11 @@ class EducationServiceController extends BaseController {
 					foreach ($affected_data as $val) {
 						$content .= '* Ajout de l\'étudiant<b> ' . $val['prenom'] . ' ' . $val['nom'] . '</b><br/>';
 					}
-
 				}
 			}
 		}
 
-		$this->registry->template->content = $form->createView().$content;
+		$this->registry->template->content = $form->createView() . $content;
 		$this->registry->template->show();
 	}
 
@@ -256,14 +252,14 @@ class EducationServiceController extends BaseController {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
-			if (isset($data['name']) && isset($data['first_name'])) {
+			if (isset($data['name']) && isset($data['surname'])) {
 				$education_service = $this->registry->newModel('EducationService');
-				$affected_data = $education_service->assignNewStudent($data['name'], $data['first_name']);
+				$affected_data = $education_service->assignNewStudent($data['name'], $data['surname']);
 
 				$content = '';
 
-				if($affected_data == 0) {
-					$content = 'Aucun enseignant ne peut conseiller <b>' . $data['first_name'] . ' ' . $data['name'] . '</b>';
+				if ($affected_data == 0) {
+					$content = 'Aucun enseignant ne peut conseiller <b>' . $data['surname'] . ' ' . $data['name'] . '</b>';
 				}
 				$data = $education_service->getData();
 				echo $content . $this->buildManageStudentTable($data);
@@ -308,7 +304,7 @@ class EducationServiceController extends BaseController {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
-			if(isset($data['name']) && isset($data['surname']) && isset($data['formation']) && isset($data['semester'])) {
+			if (isset($data['name']) && isset($data['surname']) && isset($data['formation']) && isset($data['semester'])) {
 				$education_service = $this->registry->newModel('EducationService');
 				$education_service->addStudent($data['name'], $data['surname'], $data['formation'], $data['semester']);
 				$data = $education_service->getData();
@@ -323,7 +319,7 @@ class EducationServiceController extends BaseController {
 			$data = $education_service->assignNewStudents();
 			$content .= '<br/>';
 			foreach ($data as $val) {
-				if($val['academic_researcher_name'] == '') {
+				if ($val['academic_researcher_name'] == '') {
 					$content .= '- Aucun enseignant ne peut conseiller l\'étudiant ' . $val['student_surname'] . ' ' . $val['student_name'] . '<br />';
 				} else {
 					$content .= '* Ajout du conseiller <b>' . $val['academic_researcher_surname'] . ' ' . $val['academic_researcher_name'] . '</b> pour l\'étudiant ' . $val['student_surname'] . ' ' . $val['student_name'] . '<br/>';
