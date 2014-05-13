@@ -25,11 +25,15 @@ class ProgramManagerController extends BaseController {
 		foreach ($data as $key => $val) {
 			$button = $this->registry->newComponent('ButtonWidget');
 			if (in_array($programme, $val->libelle)) {
+				$json_ajax_data = json_encode(array('name' => $val->nom, 'surname' => $val->prenom, 'action' => 'remove', 'line_number' => $key));
 				$button->setClass('check');
+				$button->addEvent('onmouseover', 'toggleClass(\'check\',\'delete-button\',this);');
+				$button->addEvent('onmouseout', 'toggleClass(\'delete-button\',\'check\',this);');
+				$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/ToggleAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $key . '\');');
 			} else {
-				$json_ajax_data = json_encode(array('name' => $val->nom, 'surname' => $val->prenom));
+				$json_ajax_data = json_encode(array('name' => $val->nom, 'surname' => $val->prenom, 'action' => 'add', 'line_number' => $key));
 				$button->setClass('none');
-				$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/AddAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $key . '\');');
+				$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/ToggleAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $key . '\');');
 			}
 			$ajaxContent = $this->registry->newComponent('DivWidget');
 			$ajaxContent->setClass('ax ajax-return-' . $key);
@@ -47,15 +51,27 @@ class ProgramManagerController extends BaseController {
 	/* Méthodes appellées via ajax */
 	/*	 * **************************** */
 
-	public function addAuthorizarionAjax() {
+	public function toggleAuthorizarionAjax() {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$ajax = $this->registry->newComponent('Ajax');
 			$data = $ajax->interceptData();
 			if (isset($data['name']) && isset($data['surname'])) {
 				$program_manager = $this->registry->newModel('ProgramManager');
-				$program_manager->addAuthorization($data['name'], $data['surname'], $this->registry->Authentification->getSession('programme'));
 				$button = $this->registry->newComponent('ButtonWidget');
-				$button->setClass('check');
+				if($data['action'] == 'add'){
+					$json_ajax_data = json_encode(array('name' => $data['name'], 'surname' => $data['surname'], 'action' => 'remove', 'line_number' => $data['line_number']));
+					$program_manager->addAuthorization($data['name'], $data['surname'], $this->registry->Authentification->getSession('programme'));
+					$button->setClass('check');
+					$button->addEvent('onmouseover', 'toggleClass(\'check\',\'delete-button\',this);');
+					$button->addEvent('onmouseout', 'toggleClass(\'delete-button\',\'check\',this);');
+					$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/ToggleAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $data['line_number'] . '\');');
+				} 
+				elseif($data['action'] == 'remove'){
+					$json_ajax_data = json_encode(array('name' => $data['name'], 'surname' => $data['surname'], 'action' => 'add', 'line_number' => $data['line_number']));
+					$program_manager->deleteAuthorization($data['name'], $data['surname'], $this->registry->Authentification->getSession('programme'));
+					$button->setClass('none');
+					$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/ToggleAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $data['line_number'] . '\');');
+				}
 				echo $button->createView();
 			}
 		}

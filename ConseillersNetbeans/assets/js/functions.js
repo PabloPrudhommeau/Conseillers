@@ -25,3 +25,13 @@ function showHideElement(element) {
 		}
 	});
 }
+
+function toggleClass(class1, class2, element) {
+	$(document).ready(function() {
+		if ($(element).hasClass(class1)){
+			$(element).removeClass(class1).addClass(class2);
+		} else {
+			$(element).removeClass(class2).addClass(class1);
+		}
+	});
+}
