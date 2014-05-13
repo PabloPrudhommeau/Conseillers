@@ -12,6 +12,45 @@ class ProgramManagerController extends BaseController {
 		$this->registry->template->show();
 	}
 
+	public function authorizeAllAcademicResearcher() {
+		$program_manager = $this->registry->newModel('ProgramManager');
+
+		$program = $this->registry->Authentification->getSession('programme');
+
+		$this->registry->template->page_first_title = "Habiliter tous les conseillés au programme " . $program;
+
+		$json_ajax_data = json_encode(array('program' => $program));
+
+		$view = 'Souhaitez vous habiliter tous les enseignants chercheurs au programme ' . $program . ' ?<br/>';
+		$button = $this->registry->newComponent('ButtonWidget');
+		$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/AuthorizeAllAcademicResearcherAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
+		$button->setLabel('Oui, je souhaite effacer tous les étudiants de la base de données');
+		$view .= $button->createView('widget_button_classic');
+
+		$ajax_content = $this->registry->newComponent('DivWidget');
+		$ajax_content->setClass('ajax-return');
+
+		$view .= $ajax_content->createView();
+
+		$this->registry->template->content = $view;
+		$this->registry->template->show();
+	}
+
+	public function showStudentAndCounsellor() {
+		$program_manager = $this->registry->newModel('ProgramManager');
+
+		$data = $program_manager->getStudentAndCounsellor($this->registry->Authentification->getSession('programme'));
+
+		$table = $this->registry->newComponent('Table');
+		$table->setDataHeader(array('Prenom', 'Nom', 'Formation', 'Conseillé assigné'));
+		$table->setDataRow($data);
+
+		$table_view = $table->createView('table_manage_data');
+
+		$this->registry->template->content = $table_view;
+		$this->registry->template->show();
+	}
+
 	public function manageHabilitation() {
 
 		$this->registry->template->page_first_title = "Gestion des habilitations des conseillers";
@@ -36,7 +75,7 @@ class ProgramManagerController extends BaseController {
 				$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/ToggleAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $key . '\');');
 			}
 			$ajaxContent = $this->registry->newComponent('DivWidget');
-			$ajaxContent->setClass('ax ajax-return-' . $key);
+			$ajaxContent->setClass('ajax-return-' . $key);
 			$ajaxContent->setContent($button->createView());
 			$data[$key]->libelle = $ajaxContent->createView();
 		}
@@ -73,6 +112,20 @@ class ProgramManagerController extends BaseController {
 					$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/ToggleAuthorizarionAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return-' . $data['line_number'] . '\');');
 				}
 				echo $button->createView();
+			}
+		}
+	}
+
+	public function AuthorizeAllAcademicResearcherAjax() {
+		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+			$ajax = $this->registry->newComponent('Ajax');
+			$data = $ajax->interceptData();
+			if (isset($data['program'])) {
+				$program_manager = $this->registry->newModel('ProgramManager');
+
+				$program_manager->addHabilitationByProgram($data['program']);
+				
+				echo 'Tous les enseignants ont été habilité pour conseiller les étudiants en ' . $data['program'];
 			}
 		}
 	}

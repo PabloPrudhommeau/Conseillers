@@ -40,6 +40,22 @@ class ProgramManagerModel {
 		return $data;
 	}
 
+	public function getStudentAndCounsellor($program) {
+		$db = Database::getInstance();
+		$query = $db->query('	SELECT	etu.prenom AS etu_prenom, 
+										etu.nom AS etu_nom, 
+										CONCAT(p.libelle, etu.semestre) AS formation, 
+										ec.nom AS ec_nom
+						        FROM etudiant AS etu
+						        LEFT JOIN conseiller AS c ON    (c.id_etudiant=etu.id)
+						        LEFT JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
+						        LEFT JOIN liste_programme AS p ON   (p.id=etu.id_programme)
+						        WHERE p.libelle = \'' . $program . '\''
+		);
+		$row = $query->fetchAll();
+		return $row;
+	}
+
 	public function addAuthorization($teacher_name, $teacher_surname, $label_authorization) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT id FROM enseignant_chercheur
@@ -59,25 +75,22 @@ class ProgramManagerModel {
 		return $this->getData();
 	}
 
-	public function addHabilitationByGroup($group, $label_authorization) {
+	public function addHabilitationByProgram($label_authorization) {
 		$db = Database::getInstance();
-		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="' . $label_authorization . '"');
-		$id_authorization = $query->fetch();
+		$st = $db->prepare('	INSERT INTO habilitation(id_enseignant_chercheur, id_programme) 
+								SELECT * FROM (	SELECT ec.id AS ec_id, lp.id AS lp_id 
+								FROM 	enseignant_chercheur AS ec, 
+										liste_programme AS lp
+								WHERE lp.libelle=\'' . $label_authorization . '\'
+								AND NOT EXISTS (
+									SELECT h.id_enseignant_chercheur FROM habilitation AS h
+									WHERE id_enseignant_chercheur = ec.id
+                                    AND h.id_programme = lp.id
+									)
+								) AS tmp'
+		);
 
-		$query = $db->query('SELECT id FROM liste_pole WHERE libelle="' . $groupe . '"');
-		$id_group = $query->fetch();
-
-		$query = $db->query('SELECT id FROM enseignant_chercheur WHERE id_pole=' . $id_group->id);
-		$id_teacher = $query->fetchAll();
-
-		foreach ($id_teacher as $value) {
-			$db->exec('INSERT INTO habilitation(id_enseignant_chercheur, id_programme) VALUES(
-																							"' . $value->id . '",
-																							"' . $id_authorization->id . '")'
-			);
-		}
-
-		return $this->getData();
+		$st->execute();
 	}
 
 	public function deleteAuthorization($teacher_name, $teacher_surname, $label_authorization) {

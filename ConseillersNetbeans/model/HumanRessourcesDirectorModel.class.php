@@ -88,7 +88,7 @@ class HumanRessourcesDirectorModel {
 		$st = $db->prepare('INSERT INTO enseignant_chercheur(nom, prenom, bureau, id_pole) VALUES (																	
 																						\'' . self::stdName($name) . '\',
 																						\'' . self::stdSurname($surname) . '\',
-																						\'' . $office . '\',
+																						\'' . strtoupper($office) . '\',
 																						\'' . self::getWorkGroupId($research_group) . '\')'
 		);
 		$st->execute();
@@ -117,7 +117,7 @@ class HumanRessourcesDirectorModel {
 								SELECT * FROM (SELECT 	' . $id_work_group . ',
 														\'' . $name . '\',
 														\'' . $surname . '\',
-														\'' . $value['bureau'] . '\') AS tmp
+														\'' . strtoupper($value['bureau']) . '\') AS tmp
 								WHERE NOT EXISTS (
 								    SELECT nom, prenom FROM enseignant_chercheur 
 								    WHERE nom=\'' . $name . '\' 
@@ -171,14 +171,14 @@ class HumanRessourcesDirectorModel {
 	function getWorkGroupId($label) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT id FROM liste_pole
-								WHERE libelle=\'' . $label . '\''
+								WHERE libelle=\'' . strtoupper($label) . '\''
 		);
 		$row = $query->fetch();
 
 		if ($row) {
 			return $row->id;
 		} else {
-			return NULL;
+			return 1;
 		}
 	}
 

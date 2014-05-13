@@ -25,7 +25,9 @@
 	"responsable_programme": {
 		"home": "/ProgramManager/",
 		"features": {
-			"Gestion des habilitations": "/ProgramManager/ManageHabilitation/"
+			"Gérer les habilitations": "/ProgramManager/ManageHabilitation/",
+			"Afficher les étudiants et leur conseillé": "/ProgramManager/ShowStudentAndCounsellor/",
+			"Habiliter tous les enseignants au programme": "/ProgramManager/AuthorizeAllAcademicResearcher/"
 		}
 	}
 }

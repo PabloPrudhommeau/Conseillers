@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Jeu 08 Mai 2014 à 12:18
+-- Généré le: Lun 12 Mai 2014 à 09:42
 -- Version du serveur: 5.6.12-log
 -- Version de PHP: 5.4.12
 
@@ -301,7 +301,8 @@ INSERT INTO `liste_statut` (`id`, `libelle`) VALUES
 CREATE TABLE IF NOT EXISTS `resp_programme` (
   `identifiant` varchar(50) NOT NULL,
   `id_programme` tinyint(4) NOT NULL,
-  PRIMARY KEY (`identifiant`,`id_programme`)
+  PRIMARY KEY (`identifiant`),
+  KEY `id_programme` (`id_programme`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -309,8 +310,7 @@ CREATE TABLE IF NOT EXISTS `resp_programme` (
 --
 
 INSERT INTO `resp_programme` (`identifiant`, `id_programme`) VALUES
-('resp', 2),
-('resp', 3);
+('resp', 2);
 
 --
 -- Contraintes pour les tables exportées
@@ -359,6 +359,7 @@ ALTER TABLE `habilitation`
 -- Contraintes pour la table `resp_programme`
 --
 ALTER TABLE `resp_programme`
+  ADD CONSTRAINT `resp_programme_ibfk_2` FOREIGN KEY (`id_programme`) REFERENCES `liste_programme` (`id`),
   ADD CONSTRAINT `resp_programme_ibfk_1` FOREIGN KEY (`identifiant`) REFERENCES `compte` (`login`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
