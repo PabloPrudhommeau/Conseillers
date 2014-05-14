@@ -19,6 +19,7 @@ class Authentification extends BaseComponent {
 	public function signin($user, $password, $token) {
 		$_SESSION['user'] = $user;
 		$_SESSION['password'] = $password;
+		$_SESSION['date'] = time();
 		foreach ($token as $key => $val) {
 			$_SESSION[$key] = $val;
 		}
@@ -42,6 +43,11 @@ class Authentification extends BaseComponent {
 			return true;
 		}
 		return false;
+	}
+
+	public function connexionTime() {
+		$time_logon = time() - $_SESSION['date'];
+		return date('H:i:s', $time_logon);
 	}
 
 }

@@ -24,7 +24,7 @@ class ProgramManagerController extends BaseController {
 		$view = 'Souhaitez vous habiliter tous les enseignants chercheurs au programme ' . $program . ' ?<br/>';
 		$button = $this->registry->newComponent('ButtonWidget');
 		$button->setAction('ajax_send(\'' . __SITE_ROOT . '/ProgramManager/AuthorizeAllAcademicResearcherAjax/\',\'' . $json_ajax_data . '\',\'.ajax-return\');');
-		$button->setLabel('Oui, je souhaite effacer tous les étudiants de la base de données');
+		$button->setLabel('Oui, je souhaite habiliter tous les enseignants au programme <b>' . $program . '</b>');
 		$view .= $button->createView('widget_button_classic');
 
 		$ajax_content = $this->registry->newComponent('DivWidget');

@@ -58,21 +58,14 @@ class ProgramManagerModel {
 
 	public function addAuthorization($teacher_name, $teacher_surname, $label_authorization) {
 		$db = Database::getInstance();
-		$query = $db->query('	SELECT id FROM enseignant_chercheur
-								WHERE nom="' . $teacher_name . '"
-								AND prenom="' . $teacher_surname . '"'
-		);
-		$id_teacher = $query->fetch();
+		$id_teacher = self::getAcademicResearcherIdByNameSurname($teacher_name, $teacher_surname);
 
-		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="' . $label_authorization . '"');
-		$id_authorization = $query->fetch();
+		$id_authorization = self::getIdProgramByLabel($label_authorization);
 
 		$db->exec('INSERT INTO habilitation(id_enseignant_chercheur, id_programme) VALUES(
-																						"' . $id_teacher->id . '",
-																						"' . $id_authorization->id . '")'
+																						"' . $id_teacher . '",
+																						"' . $id_authorization . '")'
 		);
-
-		return $this->getData();
 	}
 
 	public function addHabilitationByProgram($label_authorization) {
@@ -95,18 +88,32 @@ class ProgramManagerModel {
 
 	public function deleteAuthorization($teacher_name, $teacher_surname, $label_authorization) {
 		$db = Database::getInstance();
+
+		$id_teacher = self::getAcademicResearcherIdByNameSurname($teacher_name, $teacher_surname);
+
+		$id_authorization = self::getIdProgramByLabel($label_authorization);
+
+		$st = $db->prepare('DELETE FROM habilitation WHERE id_enseignant_chercheur=' . $id_teacher . ' AND id_programme=' . $id_authorization);
+		$st->execute();
+	}
+
+	function getAcademicResearcherIdByNameSurname($name, $surname) {
+		$db = Database::getInstance();
 		$query = $db->query('	SELECT id FROM enseignant_chercheur
-								WHERE nom="' . $teacher_name . '"
-								AND prenom="' . $teacher_surname . '"'
+								WHERE nom="' . $name . '"
+								AND prenom="' . $surname . '"'
 		);
 		$id_teacher = $query->fetch();
 
-		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="' . $label_authorization . '"');
+		return $id_teacher->id;
+	}
+
+	function getIdProgramByLabel($label) {
+		$db = Database::getInstance();
+		$query = $db->query('SELECT id FROM liste_programme WHERE libelle="' . $label . '"');
 		$id_authorization = $query->fetch();
 
-		$db->exec('DELETE FROM habilitation WHERE id_enseignant_chercheur=' . $id_teacher->id . ' AND id_programme=' . $id_authorization->id);
-
-		return $this->getData();
+		return $id_authorization->id;
 	}
 
 }

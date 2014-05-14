@@ -29,7 +29,7 @@ class HumanRessourcesDirectorModel {
 
 	public function getCounsellor() {
 		$db = Database::getInstance();
-		$query = $db->query('	SELECT COUNT( c.id_enseignant_chercheur ) AS nbetu, ec.prenom, ec.nom, ec.bureau, lp.libelle
+		$query = $db->query('	SELECT COUNT( c.id_enseignant_chercheur ) AS nbetu, ec.nom, ec.bureau, lp.libelle
 								FROM conseiller AS c
 								LEFT JOIN enseignant_chercheur AS ec ON ( ec.id = c.id_enseignant_chercheur )
 								LEFT JOIN liste_pole AS lp ON ( lp.id = ec.id_pole )
@@ -113,24 +113,35 @@ class HumanRessourcesDirectorModel {
 			$surname = self::stdSurname($value['prenom']);
 			$id_work_group = self::getWorkGroupId($value['pole']);
 
-			$st = $db->prepare('INSERT INTO enseignant_chercheur(id_pole, nom, prenom, bureau)
-								SELECT * FROM (SELECT 	' . $id_work_group . ',
-														\'' . $name . '\',
-														\'' . $surname . '\',
-														\'' . strtoupper($value['bureau']) . '\') AS tmp
-								WHERE NOT EXISTS (
-								    SELECT nom, prenom FROM enseignant_chercheur 
-								    WHERE nom=\'' . $name . '\' 
-								    AND prenom=\'' . $surname . '\'
-								) LIMIT 1'
-			);
-			$st->execute();
-			$affected = $st->rowCount();
-
-			if ($affected == 1) {
-				self::habilitationDefault($name, $surname);
+			if(!self::conformValues($name, $surname, $value['bureau'], $id_work_group)) {
 				$data_affected[$key] = array('nom' => $name,
-					'prenom' => $surname);
+												'prenom' => $surname,
+												'affected' => false);
+			} else {
+				$st = $db->prepare('INSERT INTO enseignant_chercheur(id_pole, nom, prenom, bureau)
+									SELECT * FROM (SELECT 	' . $id_work_group . ',
+															\'' . $name . '\',
+															\'' . $surname . '\',
+															\'' . strtoupper($value['bureau']) . '\') AS tmp
+									WHERE NOT EXISTS (
+									    SELECT nom, prenom FROM enseignant_chercheur 
+									    WHERE nom=\'' . $name . '\' 
+									    AND prenom=\'' . $surname . '\'
+									) LIMIT 1'
+				);
+				$st->execute();
+				$affected = $st->rowCount();
+
+				if ($affected == 1) {
+					self::habilitationDefault($name, $surname);
+					$data_affected[$key] = array('nom' => $name,
+												'prenom' => $surname,
+												'affected' => true);
+				} else {
+					$data_affected[$key] = array('nom' => $name,
+												'prenom' => $surname,
+												'affected' => false);
+				}
 			}
 		}
 
@@ -168,6 +179,18 @@ class HumanRessourcesDirectorModel {
 		$st->execute();
 	}
 
+	public function conformValues($name = '', $surname = '', $office = '', $id_work_group = '') {
+		$regex_name_surname = '/^[a-zéèêàâ]+-?[a-zéèêàâ]+$/i';
+		$regex_office = '/^[a-z][0-9]{3}-?[a-z0-9]{0,1}$/i';
+
+		if($name != '' && $surname != '' && $office != '' && preg_match($regex_name_surname, $name) && 
+			preg_match($regex_name_surname, $surname) && preg_match($regex_office, $office) && !is_null($id_work_group)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function getWorkGroupId($label) {
 		$db = Database::getInstance();
 		$query = $db->query('	SELECT id FROM liste_pole
@@ -178,7 +201,7 @@ class HumanRessourcesDirectorModel {
 		if ($row) {
 			return $row->id;
 		} else {
-			return 1;
+			return NULL;
 		}
 	}
 
@@ -202,6 +225,7 @@ class HumanRessourcesDirectorModel {
 		$st = $db->prepare('INSERT INTO habilitation(id_enseignant_chercheur, id_programme) VALUES (' . $id_enseignant_chercheur->id . ', 1)');
 		$st->execute();
 	}
+
 
 }
 

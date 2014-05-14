@@ -71,7 +71,12 @@ class EducationServiceModel {
 			$surname = self::stdSurname($value['prenom']);
 			$id_program = self::getProgramId($value['programme']);
 
-			$st = $db->prepare('INSERT INTO etudiant(id, prenom, nom, id_programme, semestre)
+			if(!self::conformValues($name, $surname, $value['programme'], $value['semestre'], $value['numero'])) {
+				$data_affected[$key] = array('nom' => $name,
+												'prenom' => $surname,
+												'affected' => false);
+			} else {
+				$st = $db->prepare('INSERT INTO etudiant(id, prenom, nom, id_programme, semestre)
 								SELECT * FROM (SELECT 	' . $value['numero'] . ',
 														\'' . $surname . '\',
 														\'' . $name . '\',
@@ -81,14 +86,22 @@ class EducationServiceModel {
 								    SELECT id FROM etudiant
 								    WHERE id=\'' . $value['numero'] . '\' 
 								) LIMIT 1'
-			);
-			$st->execute();
-			$affected = $st->rowCount();
+				);
+				$st->execute();
+				$affected = $st->rowCount();
 
-			if ($affected == 1) {
-				$data_affected[$key] = array('nom' => $name,
-					'prenom' => $surname);
+				if ($affected == 1) {
+					$data_affected[$key] = array('nom' => $name,
+						'prenom' => $surname,
+						'affected' => true);
+				} else {
+					$data_affected[$key] = array('nom' => $name,
+												'prenom' => $surname,
+												'affected' => false);
+				}
 			}
+
+			
 		}
 
 		return $data_affected;
@@ -195,7 +208,7 @@ class EducationServiceModel {
 		return $row;
 	}
 
-	public function assignNewStudent($student_name, $student_surname) {
+	public function assignNewStudent($student_id) {
 		$db = Database::getInstance();
 
 		$st = $db->prepare('INSERT INTO conseiller(id_enseignant_chercheur, id_etudiant)
@@ -205,8 +218,7 @@ class EducationServiceModel {
 											conseiller AS c
 							RIGHT OUTER JOIN enseignant_chercheur AS ec ON (ec.id=c.id_enseignant_chercheur)
 							LEFT JOIN habilitation AS h ON (h.id_enseignant_chercheur=ec.id)
-							WHERE etu.nom="' . $student_name . '"
-							AND etu.prenom="' . $student_surname . '"
+							WHERE etu.id="' . $student_id . '"
 							AND etu.id_programme=h.id_programme
 							GROUP BY(ec.id)
 							ORDER BY SUM(CASE WHEN c.id_etudiant IS NULL THEN 0 ELSE 1 END) ASC
@@ -295,6 +307,21 @@ class EducationServiceModel {
 			$i++;
 		}
 		return $assign_logs;
+	}
+
+
+	public function conformValues($name = '', $surname = '', $formation = '', $semester = '', $id = 1) {
+		$regex_name_surname = '/^[a-zéèêàâ]+-?[a-zéèêàâ]+$/i';
+		$regex_formation = '/^[a-zéèêàâ]+$/i';
+		$regex_semester = '/^[0-9]{1,2}$/';
+		$regex_id = '/^[0-9]+$/';
+
+		if($name != '' && $surname != '' && $formation != '' && $semester != '' &&  preg_match($regex_name_surname, $name) && 
+			preg_match($regex_name_surname, $surname) && preg_match($regex_formation, $formation) && preg_match($regex_semester, $semester) && preg_match($regex_id, $id)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function getProgramId($label) {
