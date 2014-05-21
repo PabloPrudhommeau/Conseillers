@@ -119,10 +119,10 @@ class HumanRessourcesDirectorModel {
 												'affected' => false);
 			} else {
 				$st = $db->prepare('INSERT INTO enseignant_chercheur(id_pole, nom, prenom, bureau)
-									SELECT * FROM (SELECT 	' . $id_work_group . ',
-															\'' . $name . '\',
-															\'' . $surname . '\',
-															\'' . strtoupper($value['bureau']) . '\') AS tmp
+									SELECT * FROM (SELECT 	' . $id_work_group . ' AS id_pole,
+															\'' . $name . '\' AS nom,
+															\'' . $surname . '\' AS prenom,
+															\'' . strtoupper($value['bureau']) . '\' AS bureau) AS tmp
 									WHERE NOT EXISTS (
 									    SELECT nom, prenom FROM enseignant_chercheur 
 									    WHERE nom=\'' . $name . '\' 
@@ -180,7 +180,7 @@ class HumanRessourcesDirectorModel {
 	}
 
 	public function conformValues($name = '', $surname = '', $office = '', $id_work_group = '') {
-		$regex_name_surname = '/^[a-zéèêàâ]+-?[a-zéèêàâ]+$/i';
+		$regex_name_surname = '/^[a-zA-ZÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜáàâäéèêëíìîïóòôöúùûüÇç]+-?[a-zA-ZÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜáàâäéèêëíìîïóòôöúùûüÇç]+$/i';
 		$regex_office = '/^[a-z][0-9]{3}-?[a-z0-9]{0,1}$/i';
 
 		if($name != '' && $surname != '' && $office != '' && preg_match($regex_name_surname, $name) && 

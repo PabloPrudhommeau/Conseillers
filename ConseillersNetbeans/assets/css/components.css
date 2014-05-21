@@ -91,6 +91,12 @@ ul.widget-menu-feature-list li a{
 	border:1px solid #ffadad;
 	background:#ffebeb;
 }
+.form-successful {
+	margin-top:10px;
+	padding:5px;
+	border:1px solid #ffadad;
+	background:#9EDBAE;
+}
 /*°°°°°°°°°°°°°°°°°°°°°°*/
 
 
@@ -113,6 +119,18 @@ table.table-component input, select {
 	width: 116px;
 	padding:4px 2px;
 	margin:0;
+}
+#student-formation {
+	width: 75px;
+	padding: 4px 2px;
+	float: left;
+	margin: 0;
+}
+#student-semester {
+	width: 65px;
+	padding: 4px 2px;
+	float: right;
+	margin: 0;
 }
 table.table-component td, th {
 	padding:5px 15px;
@@ -137,8 +155,22 @@ table.table-component tr:nth-child(even) {
 table.table-component tr:nth-child(odd) {
 	background: #fff;
 }
+.multi-table-structure {
+	display: inline-block;
+	width: 510px;
+	margin-left: 2px;
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+.multi-table-structure caption {
+	background-color: #4D677F;
+	height: 24px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	font-weight: bold;
+	color: white;
+}
 /*°°°°°°°°°°°°°°°°°°°°°°*/
-
 
 /* ----------------------- */
 /* Composant table default */
@@ -156,7 +188,7 @@ table.table-default img {
 table.table-manage-data th {
 	background: #fff;
 }
-table.table-manage-data tr td:nth-last-child(1), table.table-manage-data .hidden-row td:nth-last-child(2){
+table.table-manage-data tr td:nth-last-child(1), table.table-manage-data td:nth-last-child(2){
 	width:20px;
 	border-right:none;
 	padding:5px 15px;
@@ -165,8 +197,7 @@ table.table-manage-data #table-hidden-row, table.table-manage-data .widget-butto
 	display:none;
 }
 table.table-manage-data #table-hidden-row td {
-	padding-top : 20px;
-	padding-bottom : 20px;
+	background-color: white;
 }
 /*°°°°°°°°°°°°°°°°°°°°°°*/
 

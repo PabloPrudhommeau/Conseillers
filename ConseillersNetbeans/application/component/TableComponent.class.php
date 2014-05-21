@@ -5,10 +5,14 @@ class TableComponent extends BaseComponent {
 	private $data_header = array();
 	private $data_row = array();
 	private $data_hidden_row = array();
-	private $data_hidden_row_class = 'hidden-row';
+	private $data_hidden_row_class;
 
 	public function setCaption($title) {
 		$this->caption = $title;
+	}
+
+	public function setError($error) {
+		$this->error = $error;
 	}
 
 	public function setDataRow($arr = array()) {
@@ -23,12 +27,16 @@ class TableComponent extends BaseComponent {
 		$this->data_hidden_row = $arr;
 	}
 
-	public function setHiddenRowClass($class = 'hidden-row') {
+	public function setHiddenRowClass($class) {
 		$this->data_hidden_row_class = $class;
 	}
 
 	public function setRowClass($class) {
 		$this->class = $class;
+	}
+
+	public function setStructureClass($class) {
+		$this->structure_class = $class;
 	}
 
 	public function getHeader() {

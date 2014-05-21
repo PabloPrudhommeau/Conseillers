@@ -8,8 +8,7 @@ class ProgramManagerController extends BaseController {
 	}
 
 	public function index() {
-		$this->registry->template->content = 'TODO : liste des fonctionnalités';
-		$this->registry->template->show();
+		$this->manageHabilitation();
 	}
 
 	public function authorizeAllAcademicResearcher() {
@@ -123,10 +122,14 @@ class ProgramManagerController extends BaseController {
 			if (isset($data['program'])) {
 				$program_manager = $this->registry->newModel('ProgramManager');
 
+				$return_data = $this->registry->newComponent('DivWidget');
+				$return_data->setClass('form-successful');
+				$return_data->setContent('Tous les enseignants ont été habilité pour conseiller les étudiants en ' . $data['program']);
+
 				$program_manager->addHabilitationByProgram($data['program']);
 				
-				echo 'Tous les enseignants ont été habilité pour conseiller les étudiants en ' . $data['program'];
-			}
+				echo $return_data->createView();
+;			}
 		}
 	}
 

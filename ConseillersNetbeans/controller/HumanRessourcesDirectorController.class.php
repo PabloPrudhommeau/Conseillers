@@ -8,8 +8,7 @@ class HumanRessourcesDirectorController extends BaseController {
 	}
 
 	public function index() {
-		$this->registry->template->content = '';
-		$this->registry->template->show();
+		$this->manageAcademicResearcher();
 	}
 
 	public function manageAcademicResearcher() {
@@ -49,6 +48,11 @@ class HumanRessourcesDirectorController extends BaseController {
 				$error = false;
 				if (($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
 					while (($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
+						foreach ($row as $key => $val) {
+					       	if (!mb_detect_encoding($row[$key], 'UTF-8', true)) {
+					        	$row[$key] = utf8_encode($row[$key]);
+					       	}
+					    }
 						if (!$header) {
 							if ($row == $csv_header) {
 								$header = $row;
@@ -123,6 +127,7 @@ class HumanRessourcesDirectorController extends BaseController {
 				$table->setCaption($key);
 				$table->setDataHeader(array('Prénom', 'Nom', 'Formation'));
 				$table->setDataRow($value);
+				$table->setStructureClass('multi-table-structure');
 				$content .= $table->createView();
 			}
 		}
@@ -239,7 +244,12 @@ class HumanRessourcesDirectorController extends BaseController {
 		if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 			$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 			$data = $human_ressources_director->purgeAcademicResearcher();
-			echo '<br />Tous les enseignants ont été effacés';
+
+			$return_data = $this->registry->newComponent('DivWidget');
+			$return_data->setClass('form-successful');
+			$return_data->setContent('Tous les enseignants ont été effacé');
+			
+			echo $return_data->createView();
 		}
 	}
 
@@ -251,7 +261,7 @@ class HumanRessourcesDirectorController extends BaseController {
 				$human_ressources_director = $this->registry->newModel('HumanRessourcesDirector');
 				$ajax_content = $this->registry->newComponent('DivWidget');
 				$ajax_content->setClass('ajax-return');
-				if ($human_ressources_director->conformValues($data['name'], $data['surname'], $data['office'])) {
+				if ($human_ressources_director->conformValues($data['name'], $data['surname'], $data['office']) && !$human_ressources_director->alreadyExists($data['name'], $data['surname'])) {
 					$json_ajax_data = json_encode(array('surname' => '\'+$(\'#academic-rechearcher-surname\').val()+\'',
 						'name' => '\'+$(\'#academic-rechearcher-name\').val()+\'',
 						'office' => '\'+$(\'#office-researcher\').val()+\'',
