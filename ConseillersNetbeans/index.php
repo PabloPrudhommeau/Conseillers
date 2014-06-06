@@ -24,9 +24,13 @@ $registry = new Registry();
 $conf_files = array_diff(scandir('config/'), array('.', '..'));
 $json_data = new StdClass;
 foreach ($conf_files as $val) {
-	$filename = explode('.', $val)[0];
-	$extention = explode('.', $val)[1];
+	$filename = explode('.', $val);
+	$filename = $filename[0];
+	$extention = explode('.', $val);
+	$extention = $extention[1];
 
+	
+	
 	if ($extention == "ini") {
 		$parse = parse_ini_file('config/' . $val);
 		foreach ($parse as $key => $val2) {

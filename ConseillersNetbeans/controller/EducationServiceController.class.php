@@ -173,11 +173,11 @@ class EducationServiceController extends BaseController {
 				$error = false;
 				if (($handle = fopen($file['file']['tmp_name'], 'r')) !== FALSE) {
 					while (($row = fgetcsv($handle, 1000, ';')) !== FALSE) {
-						foreach ($row as $key => $val) {
+						/*foreach ($row as $key => $val) {
 					       	if (!mb_detect_encoding($row[$key], 'UTF-8', true)) {
 					        	$row[$key] = utf8_encode($row[$key]);
 					       	}
-					    }
+					    }*/
 						if (!$header) {
 							if ($row == $csv_header) {
 								$header = $row;

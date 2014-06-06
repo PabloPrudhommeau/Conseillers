@@ -1,26 +1,17 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4
+-- version 2.11.11.1
 -- http://www.phpmyadmin.net
 --
--- Client: localhost
--- Généré le: Mer 14 Mai 2014 à 21:40
--- Version du serveur: 5.6.12-log
--- Version de PHP: 5.4.12
+-- Serveur: localhost
+-- Généré le : Ven 06 Juin 2014 à 09:33
+-- Version du serveur: 5.5.25
+-- Version de PHP: 5.3.19
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Base de données: `conseillers`
+-- Base de données: `serrajon`
 --
-CREATE DATABASE IF NOT EXISTS `conseillers` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `conseillers`;
 
 -- --------------------------------------------------------
 
@@ -68,11 +59,6 @@ CREATE TABLE IF NOT EXISTS `conseiller` (
 -- Contenu de la table `conseiller`
 --
 
-INSERT INTO `conseiller` (`id_enseignant_chercheur`, `id_etudiant`) VALUES
-(83, 4142),
-(85, 4456),
-(86, 45221),
-(91, 1);
 
 -- --------------------------------------------------------
 
@@ -88,27 +74,12 @@ CREATE TABLE IF NOT EXISTS `enseignant_chercheur` (
   `bureau` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_pole` (`id_pole`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=98 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Contenu de la table `enseignant_chercheur`
 --
 
-INSERT INTO `enseignant_chercheur` (`id`, `id_pole`, `nom`, `prenom`, `bureau`) VALUES
-(83, 1, 'LEMERCIER', 'Marc', 'T122'),
-(85, 2, 'BIRREGAH', 'Babiga', 'H107'),
-(86, 2, 'KENS', 'Osvald', 'H021'),
-(87, 1, 'BENEL', 'Aurelien', 'T114'),
-(88, 2, 'BEJON', 'Nathan', 'T121'),
-(89, 1, 'MASSOT', 'Carl', 'T400'),
-(90, 2, 'HASSARD', 'Emile', 'H121'),
-(91, 1, 'ASOPOV', 'Arnold', 'T100'),
-(92, 2, 'SIMON', 'Nicole', 'T050'),
-(93, 1, 'NIKOS', 'Ulric', 'T312'),
-(94, 2, 'JENVAL', 'Philippes', 'T120'),
-(95, 3, 'MAUSIN', 'Philippe', 'T312-B'),
-(96, 1, 'CORPEL', 'Alain', 'T114'),
-(97, 2, 'PAUL', 'José', 'G154');
 
 -- --------------------------------------------------------
 
@@ -124,17 +95,12 @@ CREATE TABLE IF NOT EXISTS `etudiant` (
   `semestre` tinyint(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_programme` (`id_programme`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45224 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45222 ;
 
 --
 -- Contenu de la table `etudiant`
 --
 
-INSERT INTO `etudiant` (`id`, `id_programme`, `nom`, `prenom`, `semestre`) VALUES
-(1, 5, 'VOL', 'Ross', 48),
-(4142, 5, 'CHAUVIN', 'Romain', 12),
-(4456, 1, 'MARTIN', 'Jean', 4),
-(45221, 4, 'JOSSEL', 'Maris', 5);
 
 -- --------------------------------------------------------
 
@@ -153,35 +119,6 @@ CREATE TABLE IF NOT EXISTS `habilitation` (
 -- Contenu de la table `habilitation`
 --
 
-INSERT INTO `habilitation` (`id_enseignant_chercheur`, `id_programme`) VALUES
-(83, 1),
-(85, 1),
-(86, 1),
-(87, 1),
-(88, 1),
-(89, 1),
-(90, 1),
-(91, 1),
-(92, 1),
-(93, 1),
-(94, 1),
-(95, 1),
-(96, 1),
-(97, 1),
-(86, 4),
-(94, 4),
-(83, 5),
-(85, 5),
-(86, 5),
-(87, 5),
-(88, 5),
-(89, 5),
-(90, 5),
-(91, 5),
-(92, 5),
-(93, 5),
-(94, 5),
-(95, 5);
 
 -- --------------------------------------------------------
 
@@ -292,8 +229,8 @@ ALTER TABLE `compte`
 -- Contraintes pour la table `conseiller`
 --
 ALTER TABLE `conseiller`
-  ADD CONSTRAINT `conseiller_ibfk_2` FOREIGN KEY (`id_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`id`),
-  ADD CONSTRAINT `conseiller_ibfk_1` FOREIGN KEY (`id_etudiant`) REFERENCES `etudiant` (`id`);
+  ADD CONSTRAINT `conseiller_ibfk_1` FOREIGN KEY (`id_etudiant`) REFERENCES `etudiant` (`id`),
+  ADD CONSTRAINT `conseiller_ibfk_2` FOREIGN KEY (`id_enseignant_chercheur`) REFERENCES `enseignant_chercheur` (`id`);
 
 --
 -- Contraintes pour la table `enseignant_chercheur`
@@ -324,7 +261,3 @@ ALTER TABLE `habilitation`
 ALTER TABLE `resp_programme`
   ADD CONSTRAINT `resp_programme_ibfk_1` FOREIGN KEY (`identifiant`) REFERENCES `compte` (`login`),
   ADD CONSTRAINT `resp_programme_ibfk_2` FOREIGN KEY (`id_programme`) REFERENCES `liste_programme` (`id`);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
